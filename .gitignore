@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Virtual environment
 venv/
 
@@ -20,3 +21,14 @@ env.py
 
 # Django files
 *.log
+=======
+core.Microsoft*
+core.mongo*
+core.python*
+env.py
+__pycache__/
+*.py[cod]
+node_modules/
+.github/
+cloudinary_python.txt
+>>>>>>> d54edabd8bcbe545f47c404eae3d704257ae45b8
