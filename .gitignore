@@ -1,0 +1,22 @@
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Database
+db.sqlite3
+
+# Environment variables / secrets
+.env
+env.py
+
+# Mac system files
+.DS_Store
+
+# VS Code settings (optional)
+.vscode/
+
+# Django files
+*.log
