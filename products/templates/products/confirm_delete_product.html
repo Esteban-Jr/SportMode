@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block meta_title %}Delete: {{ product.name }} | SportsMode{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-body p-4 p-md-5 text-center">
+
+                    <div class="mb-4">
+                        <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size:3.5rem;"></i>
+                    </div>
+
+                    <h1 class="h3 fw-bold mb-2">Delete Product?</h1>
+                    <p class="text-muted mb-4">
+                        You are about to permanently delete
+                        <strong>{{ product.name }}</strong>.
+                        This action cannot be undone.
+                    </p>
+
+                    <!-- Product summary -->
+                    <div class="d-flex align-items-center gap-3 bg-light rounded-3 p-3 mb-4 text-start">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                                 class="rounded-2" style="width:64px; height:64px; object-fit:cover;">
+                        {% elif product.image_url %}
+                            <img src="{{ product.image_url }}" alt="{{ product.name }}"
+                                 class="rounded-2" style="width:64px; height:64px; object-fit:cover;">
+                        {% else %}
+                            <div class="rounded-2 bg-secondary d-flex align-items-center justify-content-center"
+                                 style="width:64px; height:64px;">
+                                <i class="bi bi-image text-white fs-4"></i>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <div class="fw-semibold">{{ product.name }}</div>
+                            <div class="text-muted small">£{{ product.price }}</div>
+                            {% if product.sku %}
+                            <div class="text-muted small">SKU: {{ product.sku }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <form method="POST" class="d-flex gap-3 justify-content-center">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger fw-semibold px-4">
+                            <i class="bi bi-trash me-2"></i>Yes, Delete It
+                        </button>
+                        <a href="{% url 'products:product_detail' product.slug %}"
+                           class="btn btn-outline-secondary px-4">
+                            Cancel
+                        </a>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
