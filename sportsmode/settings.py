@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ze#2vvs^fmjb33)%*0-u3h=%e(q3q9!-z1hegxrld0bty$a0hv'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -37,7 +39,35 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    'allauth',
+    'allauth.account',
+
+    'django_countries',
+    'cloudinary',
+    'cloudinary_storage',
+
+    'home',
+    'products',
+    'bag',
+    'checkout',
+    'profiles',
+    'newsletter',
 ]
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    # Needed for Django admin to work independently of allauth
+    'django.contrib.auth.backends.ModelBackend',
+    # allauth-specific authentication (username/email login)
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/profile/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -47,6 +77,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Required by django-allauth >= 0.56
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'sportsmode.urls'
@@ -54,7 +86,7 @@ ROOT_URLCONF = 'sportsmode.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -62,6 +94,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'bag.contexts.bag_contents',
             ],
         },
     },
@@ -118,8 +151,65 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# -------------------------------------------------------
+# Cloudinary — media file storage
+# -------------------------------------------------------
+# Credentials are loaded from .env via python-decouple.
+# When all three are set, django-cloudinary-storage replaces
+# Django's default FileSystemStorage for all media uploads.
+# ImageField on Product.image requires no changes.
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME', default=''),
+    'API_KEY':    config('CLOUDINARY_API_KEY',    default=''),
+    'API_SECRET': config('CLOUDINARY_API_SECRET', default=''),
+}
+
+# Only activate Cloudinary storage when credentials are present.
+# This keeps local development working with the local filesystem
+# when .env has not been configured yet.
+if all([
+    CLOUDINARY_STORAGE['CLOUD_NAME'],
+    CLOUDINARY_STORAGE['API_KEY'],
+    CLOUDINARY_STORAGE['API_SECRET'],
+]):
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+# -------------------------------------------------------
+# django-allauth configuration
+# -------------------------------------------------------
+# Allow login with either username or email
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}
+# Fields shown on the signup form (* = required)
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+# Set to 'mandatory' in production to require email confirmation
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_USERNAME_MIN_LENGTH = 4
+# Custom adapter: redirects staff/superusers to /admin/, others to /profile/
+ACCOUNT_ADAPTER = 'profiles.adapter.SportModeAccountAdapter'
+
+# Email backend — prints emails to the console during development.
+# Replace with an SMTP backend (e.g. SendGrid) in production.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Delivery settings — used by bag.contexts and templates
+FREE_DELIVERY_THRESHOLD = 50
+STANDARD_DELIVERY_COST = 3.99
+
+# -------------------------------------------------------
+# Stripe
+# -------------------------------------------------------
+STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY', default='')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default='')
+STRIPE_WH_SECRET = config('STRIPE_WH_SECRET', default='')
+# Stripe works in the smallest currency unit (pence for GBP).
+STRIPE_CURRENCY = 'gbp'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
