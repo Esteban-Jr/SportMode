@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block meta_title %}SportsMode | Premium Sports Equipment — Football, Basketball, Tennis & Fitness{% endblock %}
+{% block meta_description %}Shop premium sports equipment at SportsMode. Top gear for football, basketball, tennis, and fitness. Fast UK delivery and easy returns.{% endblock %}
+{% block meta_keywords %}sports equipment, football gear, basketball equipment, tennis rackets, fitness equipment, buy sports gear UK{% endblock %}
+
+{% block content %}
+
+<!-- =============================================
+     HERO SECTION
+     ============================================= -->
+<section class="hero-section" aria-label="Homepage hero">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="hero-badge">
+                    <i class="bi bi-lightning-charge-fill me-1"></i> New Season, New Gear
+                </div>
+                <h1 class="hero-title mb-3">
+                    Gear Up.<br>
+                    Train Hard.<br>
+                    <span class="highlight">Play Better.</span>
+                </h1>
+                <p class="hero-subtitle mb-4">
+                    Premium sports equipment for every level of athlete. Football, basketball, tennis, fitness — we've got you covered.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'products:product_list' %}" class="btn btn-warning btn-lg fw-semibold px-4">
+                        Shop Now <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                    <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg px-4">
+                        Our Story
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 offset-lg-1 d-none d-lg-flex justify-content-center">
+                <!-- Decorative icon cluster — replace with a real image when available -->
+                <div class="text-center" style="opacity:0.15; font-size: 10rem; line-height:1;">
+                    <i class="bi bi-trophy-fill text-warning"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =============================================
+     FEATURE STRIP
+     ============================================= -->
+<section class="feature-strip py-4" aria-label="Key benefits">
+    <div class="container">
+        <div class="row g-3 text-center">
+            <div class="col-6 col-md-3 feature-item">
+                <i class="bi bi-truck d-block mb-1"></i>
+                <span class="small fw-semibold">Free Delivery</span>
+                <p class="text-muted small mb-0">On orders over £50</p>
+            </div>
+            <div class="col-6 col-md-3 feature-item">
+                <i class="bi bi-arrow-return-left d-block mb-1"></i>
+                <span class="small fw-semibold">30-Day Returns</span>
+                <p class="text-muted small mb-0">Hassle-free policy</p>
+            </div>
+            <div class="col-6 col-md-3 feature-item">
+                <i class="bi bi-shield-lock d-block mb-1"></i>
+                <span class="small fw-semibold">Secure Payment</span>
+                <p class="text-muted small mb-0">Stripe-powered checkout</p>
+            </div>
+            <div class="col-6 col-md-3 feature-item">
+                <i class="bi bi-headset d-block mb-1"></i>
+                <span class="small fw-semibold">Expert Support</span>
+                <p class="text-muted small mb-0">7 days a week</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =============================================
+     SHOP BY CATEGORY
+     ============================================= -->
+<section class="py-5" aria-labelledby="categories-heading">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="section-heading" id="categories-heading">Shop by Sport</h2>
+            <p class="section-subheading">Find the right gear for your game</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Football -->
+            <div class="col-6 col-lg-3">
+                <a href="{% url 'products:product_list' %}?sport=football" class="category-placeholder cat-football" aria-label="Browse Football equipment">
+                    <div class="category-icon-wrap">
+                        <i class="bi bi-dribbble"></i>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="h5 fw-bold mb-1">Football</h3>
+                        <span class="small opacity-75">Boots, balls & more</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Basketball -->
+            <div class="col-6 col-lg-3">
+                <a href="{% url 'products:product_list' %}?sport=basketball" class="category-placeholder cat-basketball" aria-label="Browse Basketball equipment">
+                    <div class="category-icon-wrap">
+                        <i class="bi bi-dribbble-fill"></i>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="h5 fw-bold mb-1">Basketball</h3>
+                        <span class="small opacity-75">Balls, hoops & apparel</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Tennis -->
+            <div class="col-6 col-lg-3">
+                <a href="{% url 'products:product_list' %}?sport=tennis" class="category-placeholder cat-tennis" aria-label="Browse Tennis equipment">
+                    <div class="category-icon-wrap">
+                        <i class="bi bi-circle"></i>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="h5 fw-bold mb-1">Tennis</h3>
+                        <span class="small opacity-75">Rackets, balls & bags</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Fitness -->
+            <div class="col-6 col-lg-3">
+                <a href="{% url 'products:product_list' %}?sport=fitness" class="category-placeholder cat-fitness" aria-label="Browse Fitness equipment">
+                    <div class="category-icon-wrap">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="h5 fw-bold mb-1">Fitness</h3>
+                        <span class="small opacity-75">Weights, bands & more</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'products:product_list' %}" class="btn btn-outline-dark px-4">
+                View All Products <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- =============================================
+     WHY CHOOSE US
+     ============================================= -->
+<section class="bg-light py-5" aria-labelledby="why-heading">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5">
+                <h2 class="section-heading" id="why-heading">Built for Athletes, By Athletes</h2>
+                <p class="text-muted mt-3">
+                    At SportsMode, we believe the right equipment makes the difference. That's why we stock only the best — carefully selected gear across every category to help you train harder and perform better.
+                </p>
+                <ul class="list-unstyled mt-4">
+                    <li class="d-flex align-items-start mb-3">
+                        <i class="bi bi-check-circle-fill text-warning me-3 mt-1 fs-5"></i>
+                        <div>
+                            <strong>Curated Selection</strong>
+                            <p class="text-muted small mb-0">Every product is chosen for quality and performance.</p>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start mb-3">
+                        <i class="bi bi-check-circle-fill text-warning me-3 mt-1 fs-5"></i>
+                        <div>
+                            <strong>Fast, Reliable Delivery</strong>
+                            <p class="text-muted small mb-0">Get your gear quickly with tracked, UK-wide shipping.</p>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start mb-3">
+                        <i class="bi bi-check-circle-fill text-warning me-3 mt-1 fs-5"></i>
+                        <div>
+                            <strong>Easy Returns</strong>
+                            <p class="text-muted small mb-0">Not right? Send it back within 30 days, no questions asked.</p>
+                        </div>
+                    </li>
+                </ul>
+                <a href="{% url 'about' %}" class="btn btn-sport mt-2">
+                    Learn More About Us
+                </a>
+            </div>
+
+            <!-- Stats / Social Proof -->
+            <div class="col-lg-6 offset-lg-1">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="card border-0 shadow-sm text-center p-4 rounded-3 h-100">
+                            <div class="display-5 fw-bold text-sport-yellow">500+</div>
+                            <div class="text-muted small">Products in stock</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-0 shadow-sm text-center p-4 rounded-3 h-100">
+                            <div class="display-5 fw-bold text-sport-yellow">4.8<i class="bi bi-star-fill fs-4 ms-1"></i></div>
+                            <div class="text-muted small">Average rating</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-0 shadow-sm text-center p-4 rounded-3 h-100">
+                            <div class="display-5 fw-bold text-sport-yellow">10k+</div>
+                            <div class="text-muted small">Happy customers</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-0 shadow-sm text-center p-4 rounded-3 h-100">
+                            <div class="display-5 fw-bold text-sport-yellow">4</div>
+                            <div class="text-muted small">Sports categories</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =============================================
+     CTA BANNER
+     ============================================= -->
+<section class="py-5" aria-label="Newsletter sign-up call to action">
+    <div class="container">
+        <div class="cta-banner p-5 text-center">
+            <h2 class="fw-bold mb-2">Stay Ahead of the Game</h2>
+            <p class="mb-4 text-dark opacity-75">
+                Sign up for exclusive deals, new arrivals, and training tips. No spam, ever.
+            </p>
+            <form class="d-flex justify-content-center gap-2 flex-wrap" action="{% url 'newsletter:subscribe' %}" method="POST">
+                {% csrf_token %}
+                <input type="email" name="email" class="form-control w-auto"
+                       style="min-width: 280px;"
+                       placeholder="Enter your email address"
+                       aria-label="Email address for newsletter"
+                       required>
+                <button type="submit" class="btn btn-dark px-4 fw-semibold">
+                    Subscribe <i class="bi bi-envelope-check ms-1"></i>
+                </button>
+            </form>
+            <p class="small mt-3 text-dark opacity-50">
+                You can unsubscribe at any time.
+            </p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
