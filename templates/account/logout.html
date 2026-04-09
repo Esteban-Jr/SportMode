@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block meta_title %}Log Out | SportsMode{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light" aria-label="Log out confirmation">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-8 col-md-6 col-lg-4 text-center">
+
+                <i class="bi bi-box-arrow-right display-3 text-warning d-block mb-3"></i>
+                <h1 class="h3 fw-bold mb-2">Log out?</h1>
+                <p class="text-muted mb-4">
+                    Are you sure you want to log out of your SportsMode account?
+                </p>
+
+                <form method="POST" action="{% url 'account_logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sport btn-lg px-5 me-2">
+                        Yes, log out
+                    </button>
+                </form>
+
+                <a href="{% url 'home' %}" class="btn btn-outline-dark btn-lg px-5 mt-3">
+                    Cancel
+                </a>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
