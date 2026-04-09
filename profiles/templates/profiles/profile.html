@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block meta_title %}My Profile | SportsMode{% endblock %}
+{% block meta_description %}Manage your SportsMode account — update your delivery details and view your order history.{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<section class="page-header" aria-label="Profile page header">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">My Profile</li>
+            </ol>
+        </nav>
+        <h1 class="display-5 fw-bold mt-2">My Profile</h1>
+        <p class="opacity-75 mt-1 mb-0">
+            Welcome back, <strong>{{ request.user.first_name|default:request.user.username }}</strong>
+        </p>
+    </div>
+</section>
+
+<section class="py-5" aria-label="Profile content">
+    <div class="container">
+
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active fw-semibold" id="details-tab"
+                        data-bs-toggle="tab" data-bs-target="#details"
+                        type="button" role="tab"
+                        aria-controls="details" aria-selected="true">
+                    <i class="bi bi-person me-2"></i>Delivery Details
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-semibold" id="orders-tab"
+                        data-bs-toggle="tab" data-bs-target="#orders"
+                        type="button" role="tab"
+                        aria-controls="orders" aria-selected="false">
+                    <i class="bi bi-bag me-2"></i>Order History
+                    {% if orders %}
+                    <span class="badge bg-warning text-dark ms-1">{{ orders|length }}</span>
+                    {% endif %}
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="profileTabContent">
+
+            <!-- =============================================
+                 TAB 1: DELIVERY DETAILS
+                 ============================================= -->
+            <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
+                <div class="row g-5">
+
+                    <!-- Delivery form -->
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-sm rounded-3 p-4">
+                            <h2 class="h5 fw-bold mb-1">Default Delivery Address</h2>
+                            <p class="text-muted small mb-4">
+                                Saved here so checkout can pre-fill your address automatically.
+                            </p>
+
+                            <form method="POST" action="{% url 'profiles:profile' %}" novalidate>
+                                {% csrf_token %}
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Full Name</label>
+                                    {{ form.default_full_name }}
+                                    {% if form.default_full_name.errors %}
+                                    <div class="text-danger small mt-1">{{ form.default_full_name.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Phone Number</label>
+                                    {{ form.default_phone_number }}
+                                    {% if form.default_phone_number.errors %}
+                                    <div class="text-danger small mt-1">{{ form.default_phone_number.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Street Address 1</label>
+                                    {{ form.default_street_address1 }}
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Street Address 2 <span class="text-muted fw-normal">(optional)</span></label>
+                                    {{ form.default_street_address2 }}
+                                </div>
+
+                                <div class="row g-3 mb-3">
+                                    <div class="col-sm-6">
+                                        <label class="form-label small fw-semibold">Town or City</label>
+                                        {{ form.default_town_or_city }}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label small fw-semibold">County <span class="text-muted fw-normal">(optional)</span></label>
+                                        {{ form.default_county }}
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mb-4">
+                                    <div class="col-sm-6">
+                                        <label class="form-label small fw-semibold">Postcode</label>
+                                        {{ form.default_postcode }}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label small fw-semibold">Country</label>
+                                        {{ form.default_country }}
+                                        {% if form.default_country.errors %}
+                                        <div class="text-danger small mt-1">{{ form.default_country.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-sport w-100">
+                                    <i class="bi bi-save me-2"></i>Save Delivery Details
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Account info (read-only) -->
+                    <div class="col-lg-5 offset-lg-1">
+                        <div class="card border-0 shadow-sm rounded-3 p-4 mb-4">
+                            <h2 class="h5 fw-bold mb-3">Account Information</h2>
+                            <dl class="row mb-0">
+                                <dt class="col-5 text-muted small fw-normal">Username</dt>
+                                <dd class="col-7 small fw-semibold">{{ request.user.username }}</dd>
+
+                                <dt class="col-5 text-muted small fw-normal">Email</dt>
+                                <dd class="col-7 small fw-semibold">{{ request.user.email }}</dd>
+
+                                {% if request.user.first_name or request.user.last_name %}
+                                <dt class="col-5 text-muted small fw-normal">Name</dt>
+                                <dd class="col-7 small fw-semibold">
+                                    {{ request.user.first_name }} {{ request.user.last_name }}
+                                </dd>
+                                {% endif %}
+
+                                <dt class="col-5 text-muted small fw-normal">Member since</dt>
+                                <dd class="col-7 small fw-semibold">
+                                    {{ request.user.date_joined|date:"d M Y" }}
+                                </dd>
+                            </dl>
+                        </div>
+
+                        <!-- Quick links -->
+                        <div class="card border-0 shadow-sm rounded-3 p-4">
+                            <h2 class="h6 fw-bold mb-3">Quick Links</h2>
+                            <ul class="list-unstyled mb-0">
+                                <li class="mb-2">
+                                    <a href="{% url 'products:product_list' %}" class="text-dark text-decoration-none small">
+                                        <i class="bi bi-bag me-2 text-warning"></i>Continue Shopping
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="{% url 'bag:view_bag' %}" class="text-dark text-decoration-none small">
+                                        <i class="bi bi-cart me-2 text-warning"></i>View Your Bag
+                                        {% if product_count > 0 %}
+                                        <span class="badge bg-warning text-dark ms-1">{{ product_count }}</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="{% url 'delivery' %}" class="text-dark text-decoration-none small">
+                                        <i class="bi bi-truck me-2 text-warning"></i>Delivery & Returns
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'account_change_password' %}" class="text-dark text-decoration-none small">
+                                        <i class="bi bi-key me-2 text-warning"></i>Change Password
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- =============================================
+                 TAB 2: ORDER HISTORY
+                 ============================================= -->
+            <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+
+                {% if orders %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">Order #</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Items</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Status</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td>
+                                    <span class="font-monospace small">
+                                        {{ order.order_number|truncatechars:10 }}
+                                    </span>
+                                </td>
+                                <td class="small">{{ order.date|date:"d M Y" }}</td>
+                                <td class="small">
+                                    {% for item in order.lineitems.all %}
+                                        {{ item.product.name }} × {{ item.quantity }}<br>
+                                    {% endfor %}
+                                </td>
+                                <td class="fw-semibold">£{{ order.grand_total }}</td>
+                                <td>
+                                    <span class="badge bg-success">Confirmed</span>
+                                </td>
+                                <td>
+                                    <a href="#" class="btn btn-sm btn-outline-dark">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% else %}
+                <!-- Empty state — shown until checkout is built and orders exist -->
+                <div class="text-center py-5">
+                    <i class="bi bi-bag-x display-3 text-muted d-block mb-3" style="opacity:0.3;"></i>
+                    <h2 class="h4 fw-semibold mb-2">No orders yet</h2>
+                    <p class="text-muted mb-4 mx-auto" style="max-width:380px;">
+                        Your completed orders will appear here once you've made a purchase.
+                    </p>
+                    <a href="{% url 'products:product_list' %}" class="btn btn-sport px-5">
+                        Start Shopping <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
