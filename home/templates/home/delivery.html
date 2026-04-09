@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block meta_title %}Delivery & Returns | SportsMode{% endblock %}
+{% block meta_description %}SportsMode delivery options, timescales, and returns policy. Free delivery on orders over £50. Easy 30-day returns.{% endblock %}
+{% block meta_keywords %}SportsMode delivery, sports equipment delivery UK, returns policy, free shipping sports gear{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<section class="page-header" aria-label="Page header">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">Delivery & Returns</li>
+            </ol>
+        </nav>
+        <h1 class="display-5 fw-bold mt-2">Delivery & Returns</h1>
+        <p class="lead opacity-75 mt-2">Fast, tracked delivery and a hassle-free returns policy.</p>
+    </div>
+</section>
+
+<section class="py-5" aria-label="Delivery information">
+    <div class="container">
+
+        <!-- Delivery Options -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-9">
+                <h2 class="section-heading mb-4">Delivery Options</h2>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Service</th>
+                                <th>Estimated Time</th>
+                                <th>Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>Standard Delivery</strong>
+                                    <p class="text-muted small mb-0">Royal Mail Tracked 48</p>
+                                </td>
+                                <td>3–5 working days</td>
+                                <td>£3.99 <br><small class="text-muted">Free on orders over £50</small></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Express Delivery</strong>
+                                    <p class="text-muted small mb-0">Royal Mail Tracked 24</p>
+                                </td>
+                                <td>1–2 working days</td>
+                                <td>£6.99</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Next Day Delivery</strong>
+                                    <p class="text-muted small mb-0">DPD — order before 2pm</p>
+                                </td>
+                                <td>Next working day</td>
+                                <td>£9.99</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-muted small">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Working days are Monday to Friday, excluding bank holidays. Orders placed after 2pm may be dispatched the following working day.
+                </p>
+            </div>
+        </div>
+
+        <!-- Delivery Details -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-9">
+                <h2 class="section-heading mb-4">How It Works</h2>
+                <div class="row g-4">
+                    <div class="col-md-4 text-center">
+                        <div class="rounded-circle bg-warning d-inline-flex align-items-center justify-content-center mb-3"
+                             style="width:56px;height:56px;">
+                            <i class="bi bi-bag-check fs-4 text-dark"></i>
+                        </div>
+                        <h5 class="fw-semibold">1. Place Your Order</h5>
+                        <p class="text-muted small">Add products to your bag and complete checkout securely via Stripe.</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="rounded-circle bg-warning d-inline-flex align-items-center justify-content-center mb-3"
+                             style="width:56px;height:56px;">
+                            <i class="bi bi-box-seam fs-4 text-dark"></i>
+                        </div>
+                        <h5 class="fw-semibold">2. We Dispatch</h5>
+                        <p class="text-muted small">Your order is carefully packed and dispatched. You'll receive a tracking number by email.</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="rounded-circle bg-warning d-inline-flex align-items-center justify-content-center mb-3"
+                             style="width:56px;height:56px;">
+                            <i class="bi bi-truck fs-4 text-dark"></i>
+                        </div>
+                        <h5 class="fw-semibold">3. Delivered to You</h5>
+                        <p class="text-muted small">Track your parcel in real time and receive it at your door.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Returns -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-9">
+                <h2 class="section-heading mb-4">
+                    <i class="bi bi-arrow-return-left me-2 text-sport-yellow"></i>Returns Policy
+                </h2>
+                <p class="text-muted">
+                    We want you to be completely happy with your purchase. If something isn't right, you can return it to us within <strong>30 days</strong> of delivery for a full refund or exchange.
+                </p>
+
+                <h5 class="fw-semibold mt-4">Conditions for Returns</h5>
+                <ul class="text-muted">
+                    <li>Items must be unused and in their original packaging.</li>
+                    <li>Tags and labels must still be attached.</li>
+                    <li>Personalised or custom items cannot be returned unless faulty.</li>
+                    <li>Proof of purchase (your order confirmation email) is required.</li>
+                </ul>
+
+                <h5 class="fw-semibold mt-4">How to Return</h5>
+                <ol class="text-muted">
+                    <li>Log in to your account and visit your Order History.</li>
+                    <li>Select the item(s) you wish to return and submit a return request.</li>
+                    <li>Print the prepaid returns label we send to your email.</li>
+                    <li>Drop your parcel at any Post Office or collection point.</li>
+                    <li>Your refund will be processed within 3–5 working days of us receiving the return.</li>
+                </ol>
+
+                <div class="alert alert-warning mt-4" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Faulty or incorrect items?</strong> If you receive a damaged or wrong item, please <a href="{% url 'contact' %}" class="alert-link">contact us</a> and we'll resolve it immediately at no cost to you.
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact CTA -->
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="card border-0 bg-light p-4 rounded-3">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="fw-bold mb-1">Still have questions?</h5>
+                            <p class="text-muted mb-0">Our team is happy to help with any delivery or returns query.</p>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                            <a href="{% url 'contact' %}" class="btn btn-sport px-4">Contact Us</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

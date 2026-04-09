@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block meta_title %}About Us | SportsMode{% endblock %}
+{% block meta_description %}Learn about SportsMode — our mission, values, and passion for helping athletes of every level find the right sports equipment.{% endblock %}
+{% block meta_keywords %}about SportsMode, sports equipment store, our story, sports gear mission{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<section class="page-header" aria-label="Page header">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">About Us</li>
+            </ol>
+        </nav>
+        <h1 class="display-5 fw-bold mt-2">About SportsMode</h1>
+        <p class="lead opacity-75 mt-2">Our passion for sport drives everything we do.</p>
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="py-5" aria-labelledby="mission-heading">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <h2 class="section-heading" id="mission-heading">Our Mission</h2>
+                <p class="text-muted mt-3">
+                    SportsMode was founded with one goal in mind: to make premium sports equipment accessible to every athlete, from beginners to professionals. We believe the right gear shouldn't hold anyone back.
+                </p>
+                <p class="text-muted">
+                    Whether you're kicking off your first season of football, joining a local basketball league, picking up a tennis racket for the first time, or building a home gym — we have the equipment you need to hit the ground running.
+                </p>
+            </div>
+            <div class="col-lg-5 offset-lg-1">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="card border-0 bg-light text-center p-4 rounded-3 h-100">
+                            <i class="bi bi-trophy-fill text-warning fs-2 mb-2"></i>
+                            <div class="fw-bold">Quality First</div>
+                            <p class="text-muted small mb-0">Every product passes our quality checks before it reaches you.</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-0 bg-light text-center p-4 rounded-3 h-100">
+                            <i class="bi bi-people-fill text-warning fs-2 mb-2"></i>
+                            <div class="fw-bold">Community</div>
+                            <p class="text-muted small mb-0">We're sport lovers, just like you.</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-0 bg-light text-center p-4 rounded-3 h-100">
+                            <i class="bi bi-leaf-fill text-warning fs-2 mb-2"></i>
+                            <div class="fw-bold">Sustainability</div>
+                            <p class="text-muted small mb-0">We partner with brands committed to responsible practices.</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card border-0 bg-light text-center p-4 rounded-3 h-100">
+                            <i class="bi bi-headset text-warning fs-2 mb-2"></i>
+                            <div class="fw-bold">Support</div>
+                            <p class="text-muted small mb-0">Expert advice available 7 days a week.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Story -->
+<section class="bg-light py-5" aria-labelledby="story-heading">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="section-heading" id="story-heading">Our Story</h2>
+                <p class="text-muted mt-3">
+                    SportsMode started as a small side project built by a group of sports enthusiasts who couldn't find a single reliable online destination for multi-sport equipment in the UK. Every store seemed to specialise in just one sport, or offer poor-quality products at inflated prices.
+                </p>
+                <p class="text-muted">
+                    So we built one ourselves. Starting with a curated selection across four sports — football, basketball, tennis, and fitness — we've grown into a trusted destination for thousands of customers across the UK, all united by a love of sport.
+                </p>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-9">
+                <div class="row g-4 text-center">
+                    <div class="col-md-3">
+                        <div class="border-bottom border-warning border-3 pb-3 mb-3">
+                            <div class="fw-bold fs-4 text-sport-yellow">2020</div>
+                        </div>
+                        <p class="text-muted small">SportsMode founded with a vision for multi-sport retail done right.</p>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border-bottom border-warning border-3 pb-3 mb-3">
+                            <div class="fw-bold fs-4 text-sport-yellow">2021</div>
+                        </div>
+                        <p class="text-muted small">Launched with 100+ products across football and fitness.</p>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border-bottom border-warning border-3 pb-3 mb-3">
+                            <div class="fw-bold fs-4 text-sport-yellow">2022</div>
+                        </div>
+                        <p class="text-muted small">Expanded into basketball and tennis. Hit 5,000 customers.</p>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border-bottom border-warning border-3 pb-3 mb-3">
+                            <div class="fw-bold fs-4 text-sport-yellow">Today</div>
+                        </div>
+                        <p class="text-muted small">500+ products, 10k+ customers, and still growing.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5 text-center" aria-label="Call to action">
+    <div class="container">
+        <h2 class="fw-bold mb-3">Ready to gear up?</h2>
+        <p class="text-muted mb-4">Browse our full range and find the equipment that suits your game.</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{% url 'products:product_list' %}" class="btn btn-sport btn-lg px-4">Shop Now</a>
+            <a href="{% url 'contact' %}" class="btn btn-outline-dark btn-lg px-4">Get in Touch</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
