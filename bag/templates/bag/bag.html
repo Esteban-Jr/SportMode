@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block meta_title %}Your Bag | SportsMode{% endblock %}
+{% block meta_description %}Review the items in your SportsMode shopping bag and proceed to checkout.{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<section class="page-header" aria-label="Shopping bag header">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active">Your Bag</li>
+            </ol>
+        </nav>
+        <h1 class="display-5 fw-bold mt-2">Your Bag</h1>
+        <p class="opacity-75 mt-1 mb-0">
+            {{ product_count }} item{{ product_count|pluralize }} in your bag
+        </p>
+    </div>
+</section>
+
+<section class="py-5" aria-label="Bag contents">
+    <div class="container">
+
+        {% if bag_items %}
+        <div class="row g-5 align-items-start">
+
+            <!-- =============================================
+                 BAG ITEMS TABLE
+                 ============================================= -->
+            <div class="col-lg-8">
+
+                <!-- Free delivery progress bar -->
+                {% if free_delivery_delta > 0 %}
+                <div class="alert alert-warning d-flex align-items-center gap-3 mb-4" role="alert">
+                    <i class="bi bi-truck fs-4 flex-shrink-0"></i>
+                    <div>
+                        Spend <strong>£{{ free_delivery_delta|floatformat:2 }}</strong> more to get
+                        <strong>free delivery!</strong>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-success d-flex align-items-center gap-3 mb-4" role="alert">
+                    <i class="bi bi-truck fs-4 flex-shrink-0"></i>
+                    <div>You qualify for <strong>free delivery</strong> on this order.</div>
+                </div>
+                {% endif %}
+
+                <!-- Item rows -->
+                <div class="d-flex flex-column gap-3">
+                    {% for item in bag_items %}
+                    <article class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                        <div class="row g-0 align-items-center">
+
+                            <!-- Product image -->
+                            <div class="col-3 col-md-2">
+                                <a href="{% url 'products:product_detail' item.product.slug %}">
+                                    {% if item.product.image %}
+                                        <img src="{{ item.product.image.url }}"
+                                             alt="{{ item.product.name }}"
+                                             class="img-fluid"
+                                             style="height:100px; width:100%; object-fit:cover;">
+                                    {% elif item.product.image_url %}
+                                        <img src="{{ item.product.image_url }}"
+                                             alt="{{ item.product.name }}"
+                                             class="img-fluid"
+                                             style="height:100px; width:100%; object-fit:cover;">
+                                    {% else %}
+                                        <div class="bg-light d-flex align-items-center justify-content-center"
+                                             style="height:100px;">
+                                            <i class="bi bi-image text-secondary fs-3"></i>
+                                        </div>
+                                    {% endif %}
+                                </a>
+                            </div>
+
+                            <!-- Product info -->
+                            <div class="col-9 col-md-10">
+                                <div class="card-body py-3 px-3">
+                                    <div class="row align-items-center g-2">
+
+                                        <!-- Name + category -->
+                                        <div class="col-md-4">
+                                            <a href="{% url 'products:product_detail' item.product.slug %}"
+                                               class="fw-semibold text-dark text-decoration-none">
+                                                {{ item.product.name }}
+                                            </a>
+                                            {% if item.product.category %}
+                                            <p class="text-muted small mb-0">
+                                                {{ item.product.category.friendly_name|default:item.product.category.name }}
+                                            </p>
+                                            {% endif %}
+                                            {% if item.product.sku %}
+                                            <p class="text-muted small mb-0">SKU: {{ item.product.sku }}</p>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Unit price -->
+                                        <div class="col-6 col-md-2 text-muted small">
+                                            <span class="d-md-none fw-semibold text-dark">Price: </span>
+                                            £{{ item.product.price }}
+                                        </div>
+
+                                        <!-- Quantity update form -->
+                                        <div class="col-6 col-md-3">
+                                            <form method="POST"
+                                                  action="{% url 'bag:update_bag' item.item_id %}"
+                                                  class="d-flex gap-1 align-items-center qty-form">
+                                                {% csrf_token %}
+                                                <div class="input-group input-group-sm" style="max-width:110px;">
+                                                    <button type="button"
+                                                            class="btn btn-outline-secondary qty-minus"
+                                                            data-min="1"
+                                                            aria-label="Decrease quantity">
+                                                        <i class="bi bi-dash"></i>
+                                                    </button>
+                                                    <input type="number"
+                                                           name="quantity"
+                                                           value="{{ item.quantity }}"
+                                                           min="1"
+                                                           max="{{ item.product.stock_quantity }}"
+                                                           class="form-control text-center qty-input"
+                                                           aria-label="Quantity for {{ item.product.name }}">
+                                                    <button type="button"
+                                                            class="btn btn-outline-secondary qty-plus"
+                                                            data-max="{{ item.product.stock_quantity }}"
+                                                            aria-label="Increase quantity">
+                                                        <i class="bi bi-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <button type="submit"
+                                                        class="btn btn-outline-secondary btn-sm"
+                                                        title="Update quantity"
+                                                        aria-label="Update quantity">
+                                                    <i class="bi bi-arrow-clockwise"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                        <!-- Subtotal -->
+                                        <div class="col-6 col-md-2 fw-bold">
+                                            <span class="d-md-none text-muted fw-normal small">Subtotal: </span>
+                                            £{{ item.subtotal|floatformat:2 }}
+                                        </div>
+
+                                        <!-- Remove -->
+                                        <div class="col-6 col-md-1 text-end">
+                                            <form method="POST"
+                                                  action="{% url 'bag:remove_from_bag' item.item_id %}">
+                                                {% csrf_token %}
+                                                <button type="submit"
+                                                        class="btn btn-link text-danger p-0"
+                                                        title="Remove {{ item.product.name }}"
+                                                        aria-label="Remove {{ item.product.name }} from bag">
+                                                    <i class="bi bi-trash3"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+
+                <!-- Continue shopping -->
+                <div class="mt-4">
+                    <a href="{% url 'products:product_list' %}"
+                       class="btn btn-outline-dark">
+                        <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+                    </a>
+                </div>
+            </div>
+
+            <!-- =============================================
+                 ORDER SUMMARY
+                 ============================================= -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-3 p-4 sticky-top" style="top: 80px;">
+                    <h2 class="h5 fw-bold mb-4">Order Summary</h2>
+
+                    <dl class="d-flex flex-column gap-2 mb-3">
+                        <div class="d-flex justify-content-between">
+                            <dt class="fw-normal text-muted">Subtotal ({{ product_count }} item{{ product_count|pluralize }})</dt>
+                            <dd class="mb-0 fw-semibold">£{{ total|floatformat:2 }}</dd>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <dt class="fw-normal text-muted">Delivery</dt>
+                            <dd class="mb-0 fw-semibold">
+                                {% if delivery == 0 %}
+                                    <span class="text-success">Free</span>
+                                {% else %}
+                                    £{{ delivery|floatformat:2 }}
+                                {% endif %}
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <span class="fw-bold fs-5">Grand Total</span>
+                        <span class="fw-bold fs-5">£{{ grand_total|floatformat:2 }}</span>
+                    </div>
+
+                    <a href="{% url 'checkout:checkout' %}" class="btn btn-sport btn-lg w-100 mb-2">
+                        <i class="bi bi-lock-fill me-2"></i>Proceed to Checkout
+                    </a>
+                    <p class="text-muted text-center small mb-0">
+                        <i class="bi bi-shield-lock me-1"></i>Secure checkout via Stripe
+                    </p>
+
+                    <!-- Trust badges -->
+                    <div class="row text-center mt-4 pt-3 border-top g-2">
+                        <div class="col-4">
+                            <i class="bi bi-credit-card text-warning d-block fs-5 mb-1"></i>
+                            <span class="small text-muted" style="font-size:0.7rem;">All major cards</span>
+                        </div>
+                        <div class="col-4">
+                            <i class="bi bi-arrow-return-left text-warning d-block fs-5 mb-1"></i>
+                            <span class="small text-muted" style="font-size:0.7rem;">30-day returns</span>
+                        </div>
+                        <div class="col-4">
+                            <i class="bi bi-truck text-warning d-block fs-5 mb-1"></i>
+                            <span class="small text-muted" style="font-size:0.7rem;">Fast delivery</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        {% else %}
+        <!-- =============================================
+             EMPTY BAG STATE
+             ============================================= -->
+        <div class="text-center py-5">
+            <i class="bi bi-bag display-1 text-muted d-block mb-4" style="opacity:0.3;"></i>
+            <h2 class="h3 fw-bold mb-2">Your bag is empty</h2>
+            <p class="text-muted mb-4 mx-auto" style="max-width:400px;">
+                Looks like you haven't added anything yet. Browse our range and find the gear you need.
+            </p>
+            <a href="{% url 'products:product_list' %}" class="btn btn-sport btn-lg px-5">
+                Start Shopping <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+    // Quantity steppers on the bag page
+    document.querySelectorAll('.qty-form').forEach(form => {
+        const input = form.querySelector('.qty-input');
+        const minusBtn = form.querySelector('.qty-minus');
+        const plusBtn = form.querySelector('.qty-plus');
+        const maxQty = parseInt(input.max) || 99;
+
+        minusBtn.addEventListener('click', () => {
+            const current = parseInt(input.value);
+            if (current > 1) input.value = current - 1;
+        });
+
+        plusBtn.addEventListener('click', () => {
+            const current = parseInt(input.value);
+            if (current < maxQty) input.value = current + 1;
+        });
+    });
+</script>
+{% endblock %}
