@@ -1,0 +1,339 @@
+/* =============================================
+   SportMode — Base Stylesheet
+   ============================================= */
+
+/* ---- Design tokens ---- */
+:root {
+    /* The primary navy-blue used in the hero gradient and top bar.
+       Matches .hero-section background start colour exactly. */
+    --sport-blue: #0d1b2a;
+}
+
+/* ---- Global ---- */
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: #212529;
+}
+
+a {
+    transition: color 0.2s ease;
+}
+
+/* ---- Top Banner ---- */
+.top-banner {
+    background-color: var(--sport-blue);
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+}
+
+/* ---- Navbar ---- */
+#main-navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid rgba(13, 27, 42, 0.08);
+}
+
+/* Logo */
+#main-navbar .navbar-brand {
+    color: var(--sport-blue);
+    text-decoration: none;
+    gap: .55rem;
+}
+#main-navbar .navbar-brand:hover {
+    color: var(--sport-blue);
+    text-decoration: none;
+    opacity: .85;
+}
+
+/* SM monogram badge */
+.brand-monogram {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    background-color: var(--sport-blue);
+    color: #ffc107;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: -.5px;
+    line-height: 1;
+    flex-shrink: 0;
+    /* Prevent Bootstrap's navbar-brand colour cascade from recolouring the text */
+    color: #ffc107 !important;
+}
+
+/* Wordmark */
+.brand-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: var(--sport-blue);
+}
+
+/* "Mode" part in brand yellow for a subtle two-tone treatment */
+.brand-name-accent {
+    color: #c9900a;
+}
+
+/* Nav links */
+#main-navbar .nav-link {
+    color: var(--sport-blue);
+    font-weight: 500;
+}
+#main-navbar .nav-link:hover,
+#main-navbar .nav-link:focus {
+    color: #1b2a4a;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+#main-navbar .nav-link.active {
+    color: var(--sport-blue);
+    font-weight: 700;
+}
+
+/* Dropdown menus */
+#main-navbar .dropdown-item {
+    color: var(--sport-blue);
+}
+#main-navbar .dropdown-item:hover,
+#main-navbar .dropdown-item:focus {
+    background-color: rgba(13, 27, 42, 0.06);
+    color: var(--sport-blue);
+}
+
+/* Icon links (account, bag) */
+#main-navbar .nav-link i {
+    color: var(--sport-blue);
+}
+
+/* Bag badge — keep warning yellow as-is, it works on white */
+
+/* Mobile toggler — needs a dark icon on the white background */
+#main-navbar .navbar-toggler {
+    border-color: rgba(13, 27, 42, 0.25);
+}
+#main-navbar .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2813%2C 27%2C 42%2C 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* ---- Hero Section ---- */
+.hero-section {
+    position: relative;
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #0d1b2a 0%, #1b2a4a 60%, #22304a 100%);
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-badge {
+    display: inline-block;
+    background-color: rgba(255, 193, 7, 0.15);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 50px;
+    padding: 0.3rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    color: #ffffff;
+}
+
+.hero-title .highlight {
+    color: #ffc107;
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 520px;
+}
+
+/* ---- Category Cards ---- */
+.category-card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.category-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.category-card .card-img-overlay {
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 60%);
+    border-radius: 12px;
+}
+
+.category-icon-wrap {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+}
+
+.category-placeholder {
+    height: 200px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: #fff;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.category-placeholder:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    color: #fff;
+}
+
+.cat-football  { background: linear-gradient(135deg, #1a472a 0%, #2d6a4f 100%); }
+.cat-basketball { background: linear-gradient(135deg, #7d2e00 0%, #c44b00 100%); }
+.cat-tennis    { background: linear-gradient(135deg, #4a3900 0%, #907400 100%); }
+.cat-fitness   { background: linear-gradient(135deg, #1a1a3e 0%, #3a3a7e 100%); }
+
+/* ---- Features / USP Strip ---- */
+.feature-strip {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.feature-item i {
+    font-size: 1.6rem;
+    color: #ffc107;
+}
+
+/* ---- Section Headings ---- */
+.section-heading {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.section-subheading {
+    color: #6c757d;
+    font-size: 1rem;
+}
+
+/* ---- CTA Banner ---- */
+.cta-banner {
+    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+    border-radius: 16px;
+}
+
+/* ---- Informational Pages ---- */
+.page-header {
+    background: linear-gradient(135deg, #0d1b2a 0%, #1b2a4a 100%);
+    color: #fff;
+    padding: 4rem 0 3rem;
+}
+
+.page-header .breadcrumb-item a {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+}
+
+.page-header .breadcrumb-item.active {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.page-header .breadcrumb-item + .breadcrumb-item::before {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* ---- Contact Page ---- */
+.contact-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    transition: box-shadow 0.2s ease;
+}
+
+.contact-card:hover {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+}
+
+/* ---- FAQ Accordion ---- */
+.accordion-button:not(.collapsed) {
+    background-color: #fff8e1;
+    color: #212529;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: #ffc107;
+}
+
+/* ---- Quantity input — remove browser spinner arrows ---- */
+/*
+ * Pseudo-element rules for browser-native controls (spinners) must match
+ * the element alone — adding a class or id qualifier causes the rule to
+ * be silently ignored in Chrome, Safari and Edge.
+ * This project uses type="number" only for quantity fields, so targeting
+ * the element type directly is safe and intentional.
+ */
+
+/* Chrome, Safari, Edge (Blink / WebKit) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* ---- Utility ---- */
+.bg-sport-dark { background-color: #0d1b2a; }
+.text-sport-yellow { color: #ffc107; }
+.btn-sport {
+    background-color: #ffc107;
+    color: #212529;
+    font-weight: 600;
+}
+.btn-sport:hover {
+    background-color: #e0a800;
+    color: #212529;
+}
