@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block meta_title %}
+    {% if selected_category %}{{ selected_category.friendly_name }} | SportsMode
+    {% elif selected_sport %}{{ selected_sport|title }} Equipment | SportsMode
+    {% elif search_query %}Search: "{{ search_query }}" | SportsMode
+    {% else %}All Products | SportsMode{% endif %}
+{% endblock %}
+
+{% block meta_description %}
+    {% if selected_category %}Browse all {{ selected_category.friendly_name }} equipment at SportsMode.
+    {% else %}Shop premium sports equipment at SportsMode — football, basketball, tennis, and fitness gear.{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<section class="page-header" aria-label="Products page header">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                {% if selected_category %}
+                    <li class="breadcrumb-item"><a href="{% url 'products:product_list' %}">All Products</a></li>
+                    <li class="breadcrumb-item active">{{ selected_category.friendly_name }}</li>
+                {% elif search_query %}
+                    <li class="breadcrumb-item"><a href="{% url 'products:product_list' %}">All Products</a></li>
+                    <li class="breadcrumb-item active">Search</li>
+                {% else %}
+                    <li class="breadcrumb-item active">All Products</li>
+                {% endif %}
+            </ol>
+        </nav>
+        <h1 class="display-5 fw-bold mt-2">
+            {% if selected_category %}{{ selected_category.friendly_name }}
+            {% elif selected_sport %}{{ selected_sport|title }} Equipment
+            {% elif search_query %}Results for "{{ search_query }}"
+            {% else %}All Products{% endif %}
+        </h1>
+        <p class="opacity-75 mt-1 mb-0">{{ product_count }} product{{ product_count|pluralize }} found</p>
+        {% if request.user.is_staff or request.user.is_superuser %}
+        <div class="mt-3">
+            <a href="{% url 'products:add_product' %}" class="btn btn-warning btn-sm fw-semibold">
+                <i class="bi bi-plus-circle me-1"></i>Add Product
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="row g-4">
+
+        <!-- =============================================
+             SIDEBAR: Filters
+             ============================================= -->
+        <aside class="col-lg-3" aria-label="Product filters">
+
+            <!-- Search -->
+            <div class="card border-0 shadow-sm rounded-3 mb-3">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Search</h2>
+                    <form action="{% url 'products:product_list' %}" method="GET" role="search">
+                        {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category.slug }}">{% endif %}
+                        {% if selected_sport %}<input type="hidden" name="sport" value="{{ selected_sport }}">{% endif %}
+                        {% if sort_by != 'name' %}<input type="hidden" name="sort" value="{{ sort_by }}">{% endif %}
+                        <div class="input-group input-group-sm">
+                            <input type="search" name="q" class="form-control"
+                                   placeholder="Search products…"
+                                   value="{{ search_query }}"
+                                   aria-label="Search products">
+                            <button class="btn btn-warning" type="submit" aria-label="Search">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="card border-0 shadow-sm rounded-3 mb-3">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Category</h2>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-1">
+                            <a href="{% url 'products:product_list' %}{% if search_query %}?q={{ search_query }}{% endif %}"
+                               class="text-decoration-none {% if not selected_category %}fw-semibold text-dark{% else %}text-muted{% endif %}">
+                                <i class="bi bi-grid me-2"></i>All Products
+                            </a>
+                        </li>
+                        {% for cat in categories %}
+                        <li class="mb-1">
+                            <a href="{% url 'products:product_list' %}?category={{ cat.slug }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                               class="text-decoration-none {% if selected_category.slug == cat.slug %}fw-semibold text-dark{% else %}text-muted{% endif %}">
+                                <i class="bi bi-chevron-right me-1"></i>{{ cat.friendly_name|default:cat.name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Sport Filter -->
+            <div class="card border-0 shadow-sm rounded-3 mb-3">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold mb-3">Sport</h2>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-1">
+                            <a href="{% url 'products:product_list' %}{% if selected_category %}?category={{ selected_category.slug }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+                               class="text-decoration-none {% if not selected_sport %}fw-semibold text-dark{% else %}text-muted{% endif %}">
+                                <i class="bi bi-grid me-2"></i>All Sports
+                            </a>
+                        </li>
+                        {% for value, label in sport_choices %}
+                        <li class="mb-1">
+                            <a href="{% url 'products:product_list' %}?sport={{ value }}{% if selected_category %}&category={{ selected_category.slug }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+                               class="text-decoration-none {% if selected_sport == value %}fw-semibold text-dark{% else %}text-muted{% endif %}">
+                                <i class="bi bi-chevron-right me-1"></i>{{ label }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Clear Filters -->
+            {% if selected_category or selected_sport or search_query %}
+            <a href="{% url 'products:product_list' %}" class="btn btn-outline-secondary btn-sm w-100">
+                <i class="bi bi-x-circle me-1"></i> Clear All Filters
+            </a>
+            {% endif %}
+
+        </aside>
+
+        <!-- =============================================
+             MAIN: Product Grid
+             ============================================= -->
+        <main class="col-lg-9" aria-label="Product listing">
+
+            <!-- Active Filters + Sort Bar -->
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+                <!-- Active filter badges -->
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    {% if selected_category %}
+                    <span class="badge bg-dark text-white px-3 py-2">
+                        {{ selected_category.friendly_name }}
+                        <a href="{% url 'products:product_list' %}{% if search_query %}?q={{ search_query }}{% endif %}"
+                           class="text-warning ms-2" aria-label="Remove category filter">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    {% if selected_sport %}
+                    <span class="badge bg-dark text-white px-3 py-2">
+                        {{ selected_sport|title }}
+                        <a href="{% url 'products:product_list' %}{% if selected_category %}?category={{ selected_category.slug }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
+                           class="text-warning ms-2" aria-label="Remove sport filter">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    {% if search_query %}
+                    <span class="badge bg-secondary text-white px-3 py-2">
+                        "{{ search_query }}"
+                        <a href="{% url 'products:product_list' %}{% if selected_category %}?category={{ selected_category.slug }}{% endif %}{% if selected_sport %}&sport={{ selected_sport }}{% endif %}"
+                           class="text-white ms-2" aria-label="Clear search">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                </div>
+
+                <!-- Sort -->
+                <form method="GET" action="{% url 'products:product_list' %}" class="d-flex align-items-center gap-2">
+                    {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category.slug }}">{% endif %}
+                    {% if selected_sport %}<input type="hidden" name="sport" value="{{ selected_sport }}">{% endif %}
+                    {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}">{% endif %}
+                    <label for="sort-select" class="form-label mb-0 text-muted small text-nowrap">Sort by</label>
+                    <select id="sort-select" name="sort" class="form-select form-select-sm"
+                            style="width:auto;" onchange="this.form.submit()">
+                        {% for key, val in sort_options.items %}
+                        <option value="{{ key }}" {% if sort_by == key %}selected{% endif %}>{{ val.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+
+            <!-- Grid -->
+            {% if products %}
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-4">
+                {% for product in products %}
+                <div class="col">
+                    <article class="card h-100 border-0 shadow-sm product-card rounded-3 overflow-hidden">
+
+                        <!-- Image -->
+                        <a href="{% url 'products:product_detail' product.slug %}"
+                           class="product-img-wrap d-block overflow-hidden"
+                           aria-label="{{ product.name }}">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}"
+                                     alt="{{ product.name }}"
+                                     class="card-img-top product-card-img"
+                                     loading="lazy">
+                            {% elif product.image_url %}
+                                <img src="{{ product.image_url }}"
+                                     alt="{{ product.name }}"
+                                     class="card-img-top product-card-img"
+                                     loading="lazy">
+                            {% else %}
+                                <div class="product-card-img bg-light d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-image text-secondary" style="font-size:3rem;"></i>
+                                </div>
+                            {% endif %}
+
+                            <!-- Sale badge -->
+                            {% if product.is_on_sale %}
+                            <span class="badge bg-danger position-absolute top-0 start-0 m-2">
+                                -{{ product.discount_percentage }}%
+                            </span>
+                            {% endif %}
+
+                            <!-- Out of stock overlay -->
+                            {% if not product.is_in_stock %}
+                            <div class="out-of-stock-overlay">
+                                <span class="badge bg-secondary px-3 py-2">Out of Stock</span>
+                            </div>
+                            {% endif %}
+                        </a>
+
+                        <div class="card-body d-flex flex-column p-3">
+                            <!-- Category tag -->
+                            {% if product.category %}
+                            <a href="{% url 'products:product_list' %}?category={{ product.category.slug }}"
+                               class="text-muted small text-decoration-none mb-1 d-block">
+                                {{ product.category.friendly_name|default:product.category.name }}
+                            </a>
+                            {% endif %}
+
+                            <!-- Name -->
+                            <h2 class="h6 fw-semibold mb-2 product-name">
+                                <a href="{% url 'products:product_detail' product.slug %}"
+                                   class="text-dark text-decoration-none stretched-link">
+                                    {{ product.name }}
+                                </a>
+                            </h2>
+
+                            <!-- Short description -->
+                            {% if product.short_description %}
+                            <p class="text-muted small mb-2 flex-grow-1">{{ product.short_description }}</p>
+                            {% else %}
+                            <p class="text-muted small mb-2 flex-grow-1">{{ product.description|truncatewords:12 }}</p>
+                            {% endif %}
+
+                            <!-- Price -->
+                            <div class="mt-auto">
+                                <span class="fw-bold fs-5">£{{ product.price }}</span>
+                                {% if product.is_on_sale %}
+                                <span class="text-muted text-decoration-line-through ms-2 small">
+                                    £{{ product.original_price }}
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="card-footer bg-white border-0 px-3 pb-3 pt-0">
+                            <a href="{% url 'products:product_detail' product.slug %}"
+                               class="btn btn-sport btn-sm w-100">
+                                View Product
+                            </a>
+                            {% if request.user.is_staff or request.user.is_superuser %}
+                            <div class="d-flex gap-2 mt-2" style="position:relative; z-index:2;">
+                                <a href="{% url 'products:edit_product' product.slug %}"
+                                   class="btn btn-outline-warning btn-sm flex-grow-1"
+                                   aria-label="Edit {{ product.name }}">
+                                    <i class="bi bi-pencil me-1"></i>Edit
+                                </a>
+                                <a href="{% url 'products:delete_product' product.slug %}"
+                                   class="btn btn-outline-danger btn-sm flex-grow-1"
+                                   aria-label="Delete {{ product.name }}">
+                                    <i class="bi bi-trash me-1"></i>Delete
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </article>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% else %}
+            <!-- Empty state -->
+            <div class="text-center py-5">
+                <i class="bi bi-search display-3 text-muted d-block mb-3"></i>
+                <h2 class="h4 fw-semibold mb-2">No products found</h2>
+                <p class="text-muted mb-4">
+                    {% if search_query %}
+                        No results for "{{ search_query }}". Try a different search term or browse all products.
+                    {% else %}
+                        No products match the selected filters.
+                    {% endif %}
+                </p>
+                <a href="{% url 'products:product_list' %}" class="btn btn-sport px-4">
+                    View All Products
+                </a>
+            </div>
+            {% endif %}
+
+        </main>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+<style>
+    .product-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.12) !important; }
+    .product-img-wrap { position: relative; }
+    .product-card-img { width: 100%; height: 220px; object-fit: cover; transition: transform 0.3s ease; }
+    .product-card:hover .product-card-img { transform: scale(1.04); }
+    .out-of-stock-overlay {
+        position: absolute; inset: 0;
+        background: rgba(255,255,255,0.6);
+        display: flex; align-items: center; justify-content: center;
+    }
+    .product-name { min-height: 2.8rem; }
+</style>
+{% endblock %}
