@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from bag.contexts import bag_contents
 from products.models import Product
 from profiles.models import UserProfile
+from .emails import send_order_confirmation
 from .forms import OrderForm
 from .models import Order, OrderLineItem
 
@@ -189,6 +190,8 @@ def checkout_success(request, order_number):
     # Clear the bag from the session
     if 'bag' in request.session:
         del request.session['bag']
+
+    send_order_confirmation(order)
 
     context = {'order': order}
     return render(request, 'checkout/checkout_success.html', context)
