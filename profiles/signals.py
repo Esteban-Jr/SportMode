@@ -1,6 +1,8 @@
+from allauth.account.signals import user_signed_up
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.dispatch import receiver
+from .emails import send_welcome_email
 from .models import UserProfile
 
 
@@ -19,3 +21,16 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
         UserProfile.objects.create(user=instance)
     else:
         instance.userprofile.save()
+
+
+@receiver(user_signed_up)
+def on_user_signed_up(request, user, **kwargs):
+    """
+    Send a welcome email when a new account is created via allauth.
+
+    allauth's user_signed_up fires exactly once per registration —
+    never on login, password change, or any other User save — so
+    there is no risk of duplicate welcome emails.
+    """
+    if user.email:
+        send_welcome_email(user)
