@@ -7,6 +7,7 @@ from django.http import HttpResponse
 
 from products.models import Product
 from profiles.models import UserProfile
+from .emails import send_order_confirmation
 from .models import Order, OrderLineItem
 
 
@@ -134,6 +135,7 @@ class StripeWH_Handler:
                 status=500,
             )
 
+        send_order_confirmation(order)
         return HttpResponse(
             content=f'Webhook received: {event["type"]} | Order created by webhook',
             status=200,

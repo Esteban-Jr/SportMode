@@ -20,6 +20,7 @@ env.py
 
 # Django files
 *.log
+staticfiles/
 
 core.Microsoft*
 core.mongo*
