@@ -27,7 +27,11 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='localhost,127.0.0.1',
+    cast=lambda v: [h.strip() for h in v.split(',')],
+)
 
 
 # Application definition
@@ -71,6 +75,7 @@ ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -152,6 +157,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -195,9 +201,26 @@ ACCOUNT_USERNAME_MIN_LENGTH = 4
 # Custom adapter: redirects staff/superusers to /admin/, others to /profile/
 ACCOUNT_ADAPTER = 'profiles.adapter.SportModeAccountAdapter'
 
-# Email backend — prints emails to the console during development.
-# Replace with an SMTP backend (e.g. SendGrid) in production.
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# -------------------------------------------------------
+# Email
+# -------------------------------------------------------
+# In development (DEBUG=True) emails are printed to the console so no
+# real SMTP account is needed. In production set DEBUG=False and supply
+# the four EMAIL_* variables in your environment.
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='SportsMode <noreply@sportsmode.co.uk>')
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = config('EMAIL_HOST')
+    EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+# Domain used in transactional email links — override in production
+SITE_DOMAIN = config('SITE_DOMAIN', default='localhost:8000')
 
 # Delivery settings — used by bag.contexts and templates
 FREE_DELIVERY_THRESHOLD = 50
