@@ -1,0 +1,38 @@
+SportsMode — Order Confirmation
+================================
+
+Hi {{ order.full_name }},
+
+Thank you for your order! We've received your payment and your order is confirmed.
+
+ORDER REFERENCE
+---------------
+Order number : {{ order.order_number }}
+Date         : {{ order.date|date:"d M Y, H:i" }}
+
+ITEMS ORDERED
+-------------
+{% for item in order.lineitems.all %}{{ item.product.name }} (x{{ item.quantity }}) — £{{ item.lineitem_total }}
+{% endfor %}
+PAYMENT SUMMARY
+---------------
+Subtotal  : £{{ order.order_total }}
+Delivery  : {% if order.delivery_cost == 0 %}Free{% else %}£{{ order.delivery_cost }}{% endif %}
+
+Grand Total: £{{ order.grand_total }}
+
+DELIVERY ADDRESS
+----------------
+{{ order.full_name }}
+{{ order.street_address1 }}{% if order.street_address2 %}
+{{ order.street_address2 }}{% endif %}
+{{ order.town_or_city }}{% if order.county %}
+{{ order.county }}{% endif %}{% if order.postcode %}
+{{ order.postcode }}{% endif %}
+{{ order.country.name }}
+
+---
+If you have any questions, reply to this email or contact us at
+support@sportmode.co.uk
+
+Thank you for shopping with SportsMode.

@@ -1,0 +1,1 @@
+SportsMode Order Confirmed — #{{ order.order_number|slice:":8"|upper }}
