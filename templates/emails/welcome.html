@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to SportsMode</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f6f8;font-family:'Segoe UI',Arial,sans-serif;color:#212529;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0"
+         style="background-color:#f4f6f8;padding:40px 16px;">
+    <tr>
+      <td align="center">
+
+        <!-- Card -->
+        <table width="600" cellpadding="0" cellspacing="0" border="0"
+               style="max-width:600px;width:100%;background:#ffffff;
+                      border-radius:12px;overflow:hidden;
+                      box-shadow:0 2px 16px rgba(0,0,0,.08);">
+
+          <!-- ── Header ────────────────────────────────────────── -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#0d1b2a 0%,#1b2a4a 100%);
+                        padding:40px 40px 36px;">
+              <!-- Brand row -->
+              <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="background:#ffc107;border-radius:8px;
+                               width:44px;height:44px;text-align:center;
+                               vertical-align:middle;font-weight:900;
+                               font-size:13px;letter-spacing:-0.5px;
+                               color:#0d1b2a;">
+                    SM
+                  </td>
+                  <td style="padding-left:12px;vertical-align:middle;">
+                    <span style="font-size:22px;font-weight:800;
+                                  color:#ffffff;letter-spacing:-0.5px;">
+                      SportsMode
+                    </span>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Welcome headline -->
+              <p style="margin:28px 0 6px;font-size:28px;font-weight:800;
+                          color:#ffffff;letter-spacing:-0.5px;line-height:1.2;">
+                Welcome aboard,<br>{{ user.username }}!
+              </p>
+              <p style="margin:0;font-size:14px;color:rgba(255,255,255,.65);">
+                Your account is ready. Let's get shopping.
+              </p>
+            </td>
+          </tr>
+
+          <!-- ── Greeting ───────────────────────────────────────── -->
+          <tr>
+            <td style="padding:36px 40px 0;">
+              <p style="margin:0;font-size:15px;line-height:1.8;color:#495057;">
+                Hi <strong>{{ user.username }}</strong>,<br>
+                You've successfully created your SportsMode account.
+                You can now browse our full range of sports equipment,
+                save your delivery details, and track every order — all
+                from one place.
+              </p>
+            </td>
+          </tr>
+
+          <!-- ── Account details ────────────────────────────────── -->
+          <tr>
+            <td style="padding:28px 40px 0;">
+              <p style="margin:0 0 12px;font-size:11px;text-transform:uppercase;
+                          letter-spacing:0.1em;color:#6c757d;font-weight:700;
+                          border-bottom:2px solid #f0f2f5;padding-bottom:8px;">
+                Your account
+              </p>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding:10px 0;font-size:13px;color:#6c757d;width:30%;">
+                    Username
+                  </td>
+                  <td style="padding:10px 0;font-size:13px;font-weight:600;
+                               color:#212529;">
+                    {{ user.username }}
+                  </td>
+                </tr>
+                <tr style="border-top:1px solid #f0f2f5;">
+                  <td style="padding:10px 0;font-size:13px;color:#6c757d;">
+                    Email
+                  </td>
+                  <td style="padding:10px 0;font-size:13px;font-weight:600;
+                               color:#212529;">
+                    {{ user.email }}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ── Feature highlights ─────────────────────────────── -->
+          <tr>
+            <td style="padding:28px 40px 0;">
+              <p style="margin:0 0 16px;font-size:11px;text-transform:uppercase;
+                          letter-spacing:0.1em;color:#6c757d;font-weight:700;
+                          border-bottom:2px solid #f0f2f5;padding-bottom:8px;">
+                What you can do
+              </p>
+
+              <!-- Feature 1 -->
+              <table cellpadding="0" cellspacing="0" border="0"
+                     style="margin-bottom:16px;width:100%;">
+                <tr>
+                  <td style="vertical-align:top;width:36px;">
+                    <span style="display:inline-block;width:28px;height:28px;
+                                  background:#ffc107;border-radius:7px;
+                                  text-align:center;line-height:28px;
+                                  font-size:15px;">
+                      🛒
+                    </span>
+                  </td>
+                  <td style="padding-left:12px;vertical-align:top;">
+                    <strong style="font-size:14px;color:#212529;">Shop 500+ products</strong><br>
+                    <span style="font-size:13px;color:#6c757d;line-height:1.6;">
+                      Football, Basketball, Tennis, Fitness and more.
+                    </span>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Feature 2 -->
+              <table cellpadding="0" cellspacing="0" border="0"
+                     style="margin-bottom:16px;width:100%;">
+                <tr>
+                  <td style="vertical-align:top;width:36px;">
+                    <span style="display:inline-block;width:28px;height:28px;
+                                  background:#ffc107;border-radius:7px;
+                                  text-align:center;line-height:28px;
+                                  font-size:15px;">
+                      📦
+                    </span>
+                  </td>
+                  <td style="padding-left:12px;vertical-align:top;">
+                    <strong style="font-size:14px;color:#212529;">Track your orders</strong><br>
+                    <span style="font-size:13px;color:#6c757d;line-height:1.6;">
+                      Full order history and invoice details in your profile.
+                    </span>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Feature 3 -->
+              <table cellpadding="0" cellspacing="0" border="0"
+                     style="width:100%;">
+                <tr>
+                  <td style="vertical-align:top;width:36px;">
+                    <span style="display:inline-block;width:28px;height:28px;
+                                  background:#ffc107;border-radius:7px;
+                                  text-align:center;line-height:28px;
+                                  font-size:15px;">
+                      🚚
+                    </span>
+                  </td>
+                  <td style="padding-left:12px;vertical-align:top;">
+                    <strong style="font-size:14px;color:#212529;">Free delivery over £50</strong><br>
+                    <span style="font-size:13px;color:#6c757d;line-height:1.6;">
+                      Save your address once and check out faster every time.
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ── CTA ───────────────────────────────────────────── -->
+          <tr>
+            <td style="padding:36px 40px;">
+              <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="background:#0d1b2a;border-radius:8px;
+                               padding:14px 30px;text-align:center;">
+                    <a href="https://{{ site_domain }}{% url 'products:product_list' %}"
+                       style="color:#ffc107;font-size:15px;font-weight:700;
+                               text-decoration:none;letter-spacing:0.02em;
+                               display:inline-block;">
+                      Start Shopping →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ── Footer ────────────────────────────────────────── -->
+          <tr>
+            <td style="background:#f8f9fa;border-top:1px solid #f0f2f5;
+                        padding:24px 40px;text-align:center;">
+              <p style="margin:0 0 6px;font-size:12px;color:#6c757d;">
+                Questions? Email us at
+                <a href="mailto:support@sportmode.co.uk"
+                   style="color:#0d1b2a;font-weight:600;text-decoration:none;">
+                  support@sportmode.co.uk
+                </a>
+              </p>
+              <p style="margin:0;font-size:11px;color:#adb5bd;">
+                © SportsMode. You're receiving this because you created an account with us.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
