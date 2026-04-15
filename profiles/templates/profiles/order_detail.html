@@ -1,0 +1,409 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block meta_title %}Invoice #{{ order.order_number|slice:":8" }} | SportsMode{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ── Invoice shell ──────────────────────────────────────────── */
+    .invoice-wrapper {
+        max-width: 860px;
+        margin: 0 auto;
+    }
+
+    .invoice-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 24px rgba(13, 27, 42, .10);
+        overflow: hidden;
+    }
+
+    /* ── Header band ────────────────────────────────────────────── */
+    .invoice-header {
+        background: linear-gradient(135deg, #0d1b2a 0%, #1b2a4a 100%);
+        color: #fff;
+        padding: 2.25rem 2.5rem;
+    }
+
+    .invoice-logo-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 9px;
+        background-color: #ffc107;
+        color: #0d1b2a;
+        font-size: .78rem;
+        font-weight: 900;
+        letter-spacing: -.5px;
+        flex-shrink: 0;
+    }
+
+    .invoice-brand-name {
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: -.4px;
+        color: #fff;
+    }
+
+    .invoice-number-badge {
+        display: inline-block;
+        background: rgba(255, 193, 7, .15);
+        border: 1px solid rgba(255, 193, 7, .4);
+        color: #ffc107;
+        font-family: 'Courier New', monospace;
+        font-size: .82rem;
+        font-weight: 700;
+        letter-spacing: .08em;
+        padding: .3rem .9rem;
+        border-radius: 6px;
+    }
+
+    /* ── Meta grid ──────────────────────────────────────────────── */
+    .invoice-meta-label {
+        font-size: .7rem;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: rgba(255, 255, 255, .5);
+        margin-bottom: .15rem;
+    }
+
+    .invoice-meta-value {
+        font-size: .92rem;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    /* ── Body sections ──────────────────────────────────────────── */
+    .invoice-body {
+        padding: 2.25rem 2.5rem;
+        background: #fff;
+    }
+
+    .invoice-section-title {
+        font-size: .7rem;
+        text-transform: uppercase;
+        letter-spacing: .1em;
+        color: #6c757d;
+        font-weight: 700;
+        margin-bottom: .75rem;
+        padding-bottom: .4rem;
+        border-bottom: 2px solid #f0f2f5;
+    }
+
+    /* ── Line items table ───────────────────────────────────────── */
+    .invoice-table thead th {
+        background: #f8f9fa;
+        font-size: .75rem;
+        text-transform: uppercase;
+        letter-spacing: .07em;
+        color: #6c757d;
+        font-weight: 700;
+        border: none;
+        padding: .75rem 1rem;
+    }
+
+    .invoice-table tbody td {
+        padding: .9rem 1rem;
+        vertical-align: middle;
+        border-color: #f0f2f5;
+        font-size: .92rem;
+    }
+
+    .invoice-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .product-thumb {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 7px;
+        flex-shrink: 0;
+    }
+
+    .product-thumb-placeholder {
+        width: 48px;
+        height: 48px;
+        border-radius: 7px;
+        background: #f0f2f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    /* ── Totals block ───────────────────────────────────────────── */
+    .invoice-totals {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.25rem 1.5rem;
+    }
+
+    .totals-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: .35rem 0;
+        font-size: .92rem;
+        color: #495057;
+    }
+
+    .totals-divider {
+        border: none;
+        border-top: 1px solid #dee2e6;
+        margin: .5rem 0;
+    }
+
+    .totals-grand {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #0d1b2a;
+    }
+
+    /* ── Footer strip ───────────────────────────────────────────── */
+    .invoice-footer {
+        background: #f8f9fa;
+        border-top: 1px solid #f0f2f5;
+        padding: 1.25rem 2.5rem;
+        font-size: .8rem;
+        color: #6c757d;
+    }
+
+    /* ── Print styles ───────────────────────────────────────────── */
+    @media print {
+        .no-print { display: none !important; }
+        .invoice-card { box-shadow: none !important; }
+        body { background: #fff !important; }
+        .invoice-wrapper { max-width: 100%; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="py-5 bg-light" aria-label="Order invoice">
+    <div class="container invoice-wrapper">
+
+        <!-- ── Breadcrumb + actions (hidden on print) ────────────── -->
+        <div class="d-flex align-items-center justify-content-between mb-4 no-print">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'home' %}" class="text-decoration-none">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'profiles:profile' %}#orders" class="text-decoration-none">
+                            Order History
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        #{{ order.order_number|slice:":8" }}…
+                    </li>
+                </ol>
+            </nav>
+
+            <button onclick="window.print()"
+                    class="btn btn-outline-dark btn-sm d-flex align-items-center gap-2">
+                <i class="bi bi-printer"></i>
+                Print Invoice
+            </button>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════════
+             INVOICE CARD
+             ══════════════════════════════════════════════════════════ -->
+        <div class="invoice-card card">
+
+            <!-- ── Header ─────────────────────────────────────────── -->
+            <div class="invoice-header">
+                <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
+
+                    <!-- Brand -->
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="invoice-logo-badge">SM</div>
+                        <div>
+                            <div class="invoice-brand-name">SportsMode</div>
+                            <div style="font-size:.78rem;color:rgba(255,255,255,.55);">
+                                support@sportmode.co.uk
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Invoice title + number -->
+                    <div class="text-end">
+                        <div style="font-size:.75rem;text-transform:uppercase;
+                                    letter-spacing:.1em;color:rgba(255,255,255,.5);
+                                    margin-bottom:.35rem;">
+                            Invoice
+                        </div>
+                        <div class="invoice-number-badge">
+                            #{{ order.order_number }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meta row -->
+                <div class="row g-4 mt-3">
+                    <div class="col-6 col-sm-3">
+                        <div class="invoice-meta-label">Date</div>
+                        <div class="invoice-meta-value">{{ order.date|date:"d M Y" }}</div>
+                    </div>
+                    <div class="col-6 col-sm-3">
+                        <div class="invoice-meta-label">Customer</div>
+                        <div class="invoice-meta-value">{{ order.full_name }}</div>
+                    </div>
+                    <div class="col-6 col-sm-3">
+                        <div class="invoice-meta-label">Email</div>
+                        <div class="invoice-meta-value" style="font-size:.82rem;word-break:break-all;">
+                            {{ order.email }}
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-3">
+                        <div class="invoice-meta-label">Status</div>
+                        <div>
+                            <span class="badge"
+                                  style="background:#22c55e;font-size:.75rem;
+                                         padding:.35rem .75rem;border-radius:6px;">
+                                Confirmed
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Body ───────────────────────────────────────────── -->
+            <div class="invoice-body">
+
+                <div class="row g-5">
+
+                    <!-- ── Delivery address ──────────────────────── -->
+                    <div class="col-md-5">
+                        <div class="invoice-section-title">Deliver to</div>
+                        <address class="mb-0" style="line-height:1.9;font-size:.92rem;color:#495057;">
+                            <strong class="text-dark">{{ order.full_name }}</strong><br>
+                            {{ order.street_address1 }}<br>
+                            {% if order.street_address2 %}{{ order.street_address2 }}<br>{% endif %}
+                            {{ order.town_or_city }}<br>
+                            {% if order.county %}{{ order.county }}<br>{% endif %}
+                            {% if order.postcode %}{{ order.postcode }}<br>{% endif %}
+                            {{ order.country.name }}
+                        </address>
+                        {% if order.phone_number %}
+                        <p class="mt-2 mb-0 small text-muted">
+                            <i class="bi bi-telephone me-1"></i>{{ order.phone_number }}
+                        </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- ── Order totals summary ──────────────────── -->
+                    <div class="col-md-7">
+                        <div class="invoice-section-title">Payment summary</div>
+                        <div class="invoice-totals">
+                            <div class="totals-row">
+                                <span class="text-muted">Subtotal</span>
+                                <span>£{{ order.order_total }}</span>
+                            </div>
+                            <div class="totals-row">
+                                <span class="text-muted">Delivery</span>
+                                <span>
+                                    {% if order.delivery_cost == 0 %}
+                                        <span class="text-success fw-semibold">Free</span>
+                                    {% else %}
+                                        £{{ order.delivery_cost }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <hr class="totals-divider">
+                            <div class="totals-row totals-grand">
+                                <span>Grand Total</span>
+                                <span>£{{ order.grand_total }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Line items ────────────────────────────────── -->
+                <div class="mt-5">
+                    <div class="invoice-section-title">Items ordered</div>
+                    <div class="table-responsive">
+                        <table class="table invoice-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width:52px;"></th>
+                                    <th>Product</th>
+                                    <th class="text-center" style="width:80px;">Qty</th>
+                                    <th class="text-end" style="width:110px;">Unit price</th>
+                                    <th class="text-end" style="width:110px;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order.lineitems.all %}
+                                <tr>
+                                    <td>
+                                        {% if item.product.image %}
+                                            <img src="{{ item.product.image.url }}"
+                                                 alt="{{ item.product.name }}"
+                                                 class="product-thumb">
+                                        {% elif item.product.image_url %}
+                                            <img src="{{ item.product.image_url }}"
+                                                 alt="{{ item.product.name }}"
+                                                 class="product-thumb">
+                                        {% else %}
+                                            <div class="product-thumb-placeholder">
+                                                <i class="bi bi-image text-secondary small"></i>
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <p class="fw-semibold mb-0">{{ item.product.name }}</p>
+                                        {% if item.product.sku %}
+                                        <p class="text-muted mb-0" style="font-size:.78rem;">
+                                            SKU: {{ item.product.sku }}
+                                        </p>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">{{ item.quantity }}</td>
+                                    <td class="text-end text-muted">
+                                        £{{ item.product.price }}
+                                    </td>
+                                    <td class="text-end fw-semibold">
+                                        £{{ item.lineitem_total }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div><!-- /invoice-body -->
+
+            <!-- ── Footer strip ───────────────────────────────────── -->
+            <div class="invoice-footer d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <span>
+                    Thank you for shopping with <strong>SportsMode</strong>.
+                    Questions? Email
+                    <a href="mailto:support@sportmode.co.uk"
+                       class="text-dark fw-semibold">support@sportmode.co.uk</a>
+                </span>
+                <span class="font-monospace" style="font-size:.75rem;">
+                    {{ order.order_number }}
+                </span>
+            </div>
+
+        </div><!-- /invoice-card -->
+
+        <!-- ── Back button (hidden on print) ────────────────────── -->
+        <div class="mt-4 text-center no-print">
+            <a href="{% url 'profiles:profile' %}#orders"
+               class="btn btn-outline-dark px-4">
+                <i class="bi bi-arrow-left me-2"></i>Back to Order History
+            </a>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
