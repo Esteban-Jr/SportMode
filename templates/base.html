@@ -90,7 +90,7 @@
                 <ul class="navbar-nav align-items-center gap-1">
                     <!-- Search -->
                     <li class="nav-item">
-                        <form class="d-flex" role="search" action="#" method="GET">
+                        <form class="d-flex" role="search" action="{% url 'products:product_list' %}" method="GET">
                             <div class="input-group input-group-sm">
                                 <input class="form-control" type="search" name="q"
                                        placeholder="Search products..." aria-label="Search">
