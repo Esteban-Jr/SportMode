@@ -1,0 +1,23 @@
+Welcome to SportsMode, {{ user.username }}!
+==========================================
+
+Hi {{ user.username }},
+
+Your account has been created successfully. You're all set to start
+browsing and shopping at SportsMode.
+
+YOUR ACCOUNT DETAILS
+--------------------
+Username : {{ user.username }}
+Email    : {{ user.email }}
+
+WHAT YOU CAN DO
+---------------
+- Browse 500+ sports products across Football, Basketball, Tennis and Fitness
+- Save your delivery address for faster checkout
+- Track all your orders from your profile page
+
+If you have any questions, contact us at support@sportmode.co.uk
+
+Happy shopping,
+The SportsMode Team
