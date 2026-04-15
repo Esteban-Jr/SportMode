@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.contrib import messages
+from checkout.models import Order
 from .models import UserProfile
 from .forms import UserProfileForm
 
@@ -41,3 +43,26 @@ def profile(request):
         'orders': orders,
     }
     return render(request, 'profiles/profile.html', context)
+
+
+@login_required
+def order_detail(request, order_number):
+    """
+    Invoice page for a single order.
+
+    Accessible only to:
+    - The customer who placed the order (matched via user_profile).
+    - Staff / superusers (admin oversight).
+
+    Guests and other logged-in users receive 403.
+    """
+    order = get_object_or_404(Order, order_number=order_number)
+
+    # Ownership check — staff bypass
+    if not request.user.is_staff:
+        user_profile = request.user.userprofile
+        if order.user_profile != user_profile:
+            raise PermissionDenied
+
+    context = {'order': order}
+    return render(request, 'profiles/order_detail.html', context)
