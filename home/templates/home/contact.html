@@ -80,7 +80,7 @@
 
                 <!-- Contact Form -->
                 <h3 class="h5 fw-semibold mb-3">Send a Message</h3>
-                <form action="#" method="POST" novalidate>
+                <form action="{% url 'contact' %}" method="POST" novalidate>
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="contact-name" class="form-label small fw-semibold">Your Name</label>
