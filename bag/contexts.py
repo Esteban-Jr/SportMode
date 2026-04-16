@@ -1,6 +1,5 @@
 from decimal import Decimal
 from django.conf import settings
-from django.shortcuts import get_object_or_404
 from products.models import Product
 
 
@@ -22,9 +21,14 @@ def bag_contents(request):
     product_count = 0
 
     bag = request.session.get('bag', {})
+    stale_ids = []
 
     for item_id, quantity in bag.items():
-        product = get_object_or_404(Product, pk=item_id)
+        try:
+            product = Product.objects.get(pk=item_id)
+        except Product.DoesNotExist:
+            stale_ids.append(item_id)
+            continue
         subtotal = product.price * quantity
         total += subtotal
         product_count += quantity
@@ -34,6 +38,12 @@ def bag_contents(request):
             'quantity': quantity,
             'subtotal': subtotal,
         })
+
+    # Remove any stale product IDs from the session
+    if stale_ids:
+        for sid in stale_ids:
+            bag.pop(sid, None)
+        request.session['bag'] = bag
 
     # Delivery logic — mirrors what is shown in templates and the delivery page
     free_delivery_threshold = Decimal(str(settings.FREE_DELIVERY_THRESHOLD))
