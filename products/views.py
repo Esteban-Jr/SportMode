@@ -86,6 +86,10 @@ def product_list(request):
         'products': products,
         'categories': categories,
         'sport_choices': Product.SPORT_CHOICES,
+        'sport_choices_with_emoji': [
+            (value, label, {'football': '⚽', 'basketball': '🏀', 'tennis': '🎾', 'fitness': '🏋️'}.get(value, '🏅'))
+            for value, label in Product.SPORT_CHOICES
+        ],
         'selected_category': selected_category,
         'selected_sport': selected_sport,
         'search_query': search_query,

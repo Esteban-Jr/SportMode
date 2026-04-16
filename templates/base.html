@@ -72,10 +72,10 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'products:product_list' %}">All Products</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'products:product_list' %}?sport=football"><i class="bi bi-dribbble me-2"></i>Football</a></li>
-                            <li><a class="dropdown-item" href="{% url 'products:product_list' %}?sport=basketball"><i class="bi bi-dribbble me-2"></i>Basketball</a></li>
-                            <li><a class="dropdown-item" href="{% url 'products:product_list' %}?sport=tennis"><i class="bi bi-circle me-2"></i>Tennis</a></li>
-                            <li><a class="dropdown-item" href="{% url 'products:product_list' %}?sport=fitness"><i class="bi bi-heart-pulse me-2"></i>Fitness</a></li>
+                            <li><a class="dropdown-item" href="{% url 'products:product_list' %}?sport=football">⚽ Football</a></li>
+                            <li><a class="dropdown-item" href="{% url 'products:product_list' %}?sport=basketball">🏀 Basketball</a></li>
+                            <li><a class="dropdown-item" href="{% url 'products:product_list' %}?sport=tennis">🎾 Tennis</a></li>
+                            <li><a class="dropdown-item" href="{% url 'products:product_list' %}?sport=fitness">🏋️ Fitness</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -222,7 +222,7 @@
         <div class="container mt-3">
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
+                    {{ message|safe }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
