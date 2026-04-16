@@ -26,3 +26,9 @@ class SubscriberForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['email'].label = False
+
+    def validate_unique(self):
+        # Uniqueness is intentionally handled in the view so we can
+        # return tailored messages (already subscribed / reactivated)
+        # instead of a raw form error that would bypass that logic.
+        pass
