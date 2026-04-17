@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /bag/
+Disallow: /checkout/
+Disallow: /profile/
+Disallow: /newsletter/
+Disallow: /products/add/
+Disallow: /products/*/edit/
+Disallow: /products/*/delete/
