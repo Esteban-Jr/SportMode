@@ -60,7 +60,7 @@
             <!-- Search -->
             <div class="card border-0 shadow-sm rounded-3 mb-3">
                 <div class="card-body">
-                    <h2 class="h6 fw-bold mb-3">Search</h2>
+                    <p class="h6 fw-bold mb-3">Search</p>
                     <form action="{% url 'products:product_list' %}" method="GET" role="search">
                         {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category.slug }}">{% endif %}
                         {% if selected_sport %}<input type="hidden" name="sport" value="{{ selected_sport }}">{% endif %}
@@ -81,7 +81,7 @@
             <!-- Category Filter -->
             <div class="card border-0 shadow-sm rounded-3 mb-3">
                 <div class="card-body">
-                    <h2 class="h6 fw-bold mb-3">Category</h2>
+                    <p class="h6 fw-bold mb-3">Category</p>
                     <ul class="list-unstyled mb-0">
                         <li class="mb-1">
                             <a href="{% url 'products:product_list' %}{% if search_query %}?q={{ search_query }}{% endif %}"
@@ -104,7 +104,7 @@
             <!-- Sport Filter -->
             <div class="card border-0 shadow-sm rounded-3 mb-3">
                 <div class="card-body">
-                    <h2 class="h6 fw-bold mb-3">Sport</h2>
+                    <p class="h6 fw-bold mb-3">Sport</p>
                     <ul class="list-unstyled mb-0">
                         <li class="mb-1">
                             <a href="{% url 'products:product_list' %}{% if selected_category %}?category={{ selected_category.slug }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}"
@@ -238,12 +238,12 @@
                             {% endif %}
 
                             <!-- Name -->
-                            <h2 class="h6 fw-semibold mb-2 product-name">
+                            <h3 class="h6 fw-semibold mb-2 product-name">
                                 <a href="{% url 'products:product_detail' product.slug %}"
                                    class="text-dark text-decoration-none stretched-link">
                                     {{ product.name }}
                                 </a>
-                            </h2>
+                            </h3>
 
                             <!-- Short description -->
                             {% if product.short_description %}
