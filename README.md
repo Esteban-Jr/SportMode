@@ -4,8 +4,8 @@
 
 **SportsMode** is a full-stack e-commerce web application built with Django. It sells premium sports equipment across four categories — Football, Basketball, Tennis, and Fitness — and is submitted as a Code Institute Portfolio Project 5 (Full Stack E-Commerce).
 
-> **Live Site:** [https://sportsmode-XXXXXX.herokuapp.com](https://sportsmode-XXXXXX.herokuapp.com)  
-> **GitHub Repository:** [https://github.com/YOUR_USERNAME/sportsmode](https://github.com/YOUR_USERNAME/sportsmode)
+> **Live Site:** [https://sportsmode-2f5683baa15c.herokuapp.com/](https://sportsmode-2f5683baa15c.herokuapp.com/)  
+> **GitHub Repository:** [https://github.com/Esteban-Jr/SportMode](https://github.com/Esteban-Jr/SportMode)
 
 ---
 
@@ -87,7 +87,6 @@ User stories were tracked during development. They are grouped by Epic below.
 | 3 | Shopper | Search for products by keyword | I can find a specific item I have in mind | Must Have |
 | 4 | Shopper | Sort products by price or name | I can compare products easily | Should Have |
 | 5 | Shopper | View a product detail page | I can see full information before buying | Must Have |
-| 6 | Shopper | See related products on a detail page | I can discover additional relevant items | Could Have |
 
 #### Epic 2 — Shopping Bag & Checkout
 
@@ -100,7 +99,6 @@ User stories were tracked during development. They are grouped by Epic below.
 | 11 | Shopper | See how far I am from free delivery | I can decide whether to add more items | Should Have |
 | 12 | Shopper | Pay securely with a debit or credit card | I can complete my purchase safely | Must Have |
 | 13 | Shopper | Receive an order confirmation email | I have a record and proof of my purchase | Must Have |
-| 14 | Shopper | Check out as a guest | I do not have to create an account to buy | Must Have |
 
 #### Epic 3 — User Accounts
 
