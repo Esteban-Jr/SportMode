@@ -64,9 +64,9 @@
                      LINE ITEMS
                      ------------------------------------------------------- -->
                 <div class="card border-0 shadow-sm rounded-3 mb-4">
-                    <div class="card-header detail-card-header fw-semibold py-3">
+                    <h2 class="card-header detail-card-header fw-semibold py-3 fs-6">
                         <i class="bi bi-bag-check me-2"></i>Order Details
-                    </div>
+                    </h2>
                     <div class="card-body p-0">
                         {% for item in order.lineitems.all %}
                         <div class="d-flex align-items-center gap-3 px-4 py-3
@@ -107,9 +107,9 @@
                     <!-- Delivery address -->
                     <div class="col-md-6">
                         <div class="card border-0 shadow-sm rounded-3 h-100">
-                            <div class="card-header bg-light fw-semibold py-3">
+                            <h2 class="card-header bg-light fw-semibold py-3 fs-6">
                                 <i class="bi bi-geo-alt me-2"></i>Delivery Address
-                            </div>
+                            </h2>
                             <div class="card-body p-4 small text-muted">
                                 <address class="mb-0" style="line-height:1.8;">
                                     {{ order.full_name }}<br>
@@ -127,9 +127,9 @@
                     <!-- Order totals -->
                     <div class="col-md-6">
                         <div class="card border-0 shadow-sm rounded-3 h-100">
-                            <div class="card-header bg-light fw-semibold py-3">
+                            <h2 class="card-header bg-light fw-semibold py-3 fs-6">
                                 <i class="bi bi-receipt me-2"></i>Order Summary
-                            </div>
+                            </h2>
                             <div class="card-body p-4">
                                 <dl class="row mb-0 small gy-2">
                                     <dt class="col-7 text-muted fw-normal">Order date</dt>
