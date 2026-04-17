@@ -4,8 +4,6 @@
 
 /* ---- Design tokens ---- */
 :root {
-    /* The primary navy-blue used in the hero gradient and top bar.
-       Matches .hero-section background start colour exactly. */
     --sport-blue: #0d1b2a;
 }
 
@@ -108,9 +106,7 @@ a {
     color: var(--sport-blue);
 }
 
-/* Bag badge — keep warning yellow as-is, it works on white */
-
-/* Mobile toggler — needs a dark icon on the white background */
+/* Mobile toggler */
 #main-navbar .navbar-toggler {
     border-color: rgba(13, 27, 42, 0.25);
 }
@@ -305,13 +301,6 @@ a {
 }
 
 /* ---- Quantity input — remove browser spinner arrows ---- */
-/*
- * Pseudo-element rules for browser-native controls (spinners) must match
- * the element alone — adding a class or id qualifier causes the rule to
- * be silently ignored in Chrome, Safari and Edge.
- * This project uses type="number" only for quantity fields, so targeting
- * the element type directly is safe and intentional.
- */
 
 /* Chrome, Safari, Edge (Blink / WebKit) */
 input[type="number"]::-webkit-inner-spin-button,
