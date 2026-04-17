@@ -585,6 +585,18 @@ User stories were tracked during development. They are grouped by Epic below.
 
 ## Testing
 
+- **HTML** — All HTML templates were tested using the [W3C Markup Validation Service](https://validator.w3.org/). 
+
+![W3C HTML Screenshot](./static/readme_images/Html-checker.png)
+
+- **CSS** — All custom CSS was tested with the [W3C CSS Validator](https://jigsaw.w3.org/css-validator/). 
+
+![W3C CSS Screenshot](./static/readme_images/Css-checker.png)
+
+- **Lighthouse** used to evaluate performance, accessibility, SEO, and best practices.
+
+![Lighthouse Screenshot](./static/readme_images/Lighthouse-test.png)
+
 ### Automated Tests
 
 All **61 automated tests** pass. Run the full test suite with:
@@ -917,6 +929,10 @@ heroku stack:set heroku-22
 | `.gitignore` | Excludes `.env`, `staticfiles/`, `db.sqlite3`, `media/`, `__pycache__/` |
 
 ---
+
+## Facebook
+
+![Facebook page](./static/readme_images/sm-facebook.png)
 
 ## Credits
 
