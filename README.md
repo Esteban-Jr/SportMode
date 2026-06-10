@@ -19,18 +19,23 @@
 3. [Features](#features)
    - [Existing Features](#existing-features)
    - [Future Features](#future-features)
-4. [Technologies Used](#technologies-used)
-5. [Testing](#testing)
+4. [Web Marketing](#web-marketing)
+   - [Business Model](#business-model)
+   - [Target Audience](#target-audience)
+   - [Marketing Strategy](#marketing-strategy)
+   - [Facebook Business Page](#facebook-business-page)
+5. [Technologies Used](#technologies-used)
+6. [Testing](#testing)
    - [Automated Tests](#automated-tests)
    - [Manual Testing](#manual-testing)
    - [Browser Compatibility](#browser-compatibility)
    - [Responsiveness](#responsiveness)
    - [Validators](#validators)
    - [Known Bugs](#known-bugs)
-6. [Deployment](#deployment)
+7. [Deployment](#deployment)
    - [Local Development](#local-development)
    - [Heroku Deployment](#heroku-deployment)
-7. [Credits](#credits)
+8. [Credits](#credits)
 
 ---
 
@@ -127,6 +132,17 @@ User stories were tracked during development. They are grouped by Epic below.
 |----|---------|----------|-----------|----------|
 | 26 | Visitor | Sign up for the newsletter | I receive exclusive deals and updates | Should Have |
 | 27 | Returning subscriber | Re-subscribe after unsubscribing | I can opt back in easily | Could Have |
+| 28 | Subscriber | Unsubscribe from the newsletter | I can stop receiving emails at any time | Must Have |
+
+#### Epic 6 — Reviews & Wishlist
+
+| ID | As a... | I can... | So that... | Priority |
+|----|---------|----------|-----------|----------|
+| 29 | Registered user | Leave a star rating and written review on a product | I can share my experience with other shoppers | Should Have |
+| 30 | Registered user | Edit or delete my own review | I can correct mistakes or update my opinion | Should Have |
+| 31 | Registered user | Save products to a wishlist | I can come back to them later without adding to my bag | Should Have |
+| 32 | Registered user | Remove products from my wishlist | I can keep my saved list relevant | Should Have |
+| 33 | Registered user | Add a wishlisted product directly to my bag | I can purchase quickly from my saved items | Could Have |
 
 ---
 
@@ -492,8 +508,8 @@ User stories were tracked during development. They are grouped by Epic below.
 - Line items table with product thumbnail, name, quantity, unit price, and subtotal
 - Print button with print-optimised CSS (`@media print`)
 
-#### Newsletter Subscription
-- Email sign-up form on homepage CTA and in the site footer
+#### Newsletter Subscription & Unsubscribe
+- Email sign-up form in the site footer (Django-backed, saves to database)
 - Three distinct outcomes with tailored messages:
   - **New subscriber** — created, success message
   - **Already active** — info message, no duplicate created
@@ -501,6 +517,25 @@ User stories were tracked during development. They are grouped by Epic below.
 - Invalid email rejected with error message
 - POST-redirect-GET pattern prevents re-submission on browser refresh
 - Returns user to the page they submitted from (HTTP_REFERER)
+- Dedicated `/newsletter/unsubscribe/` page — accessible without login
+- Unsubscribe link in the site footer on every page
+- Soft-delete pattern: `is_active = False` preserves the record for re-subscription
+
+#### Product Reviews
+- Registered users can leave a star rating (1–5) and written review on any product
+- One review per user per product enforced at the database level
+- Reviews tab on every product detail page showing average rating, star display, and all reviews
+- Review authors can edit or delete their own review
+- Staff and superusers can delete any review
+- Average rating and review count shown in the Reviews tab summary
+
+#### Wishlist
+- Registered users can save any product to a personal wishlist
+- Heart icon in the navbar shows item count and fills red when the wishlist has items
+- Add / Remove toggle on every product detail page — updates instantly
+- Dedicated `/wishlist/` page listing all saved items with stock status and sale badges
+- Add to Bag directly from the wishlist page
+- Wishlist link in the account dropdown menu
 
 #### Staff Product Management (Front-end)
 - **Add Product** — full form with Cloudinary image upload
@@ -521,17 +556,109 @@ User stories were tracked during development. They are grouped by Epic below.
 
 ### Future Features
 
-- **Product Reviews & Ratings** — allow customers to leave star ratings and written reviews on products
-- **Wishlist** — save products without adding to the bag, persisted to the database for logged-in users
 - **Discount Codes / Vouchers** — apply coupon codes at checkout for a percentage or fixed discount
 - **Stock Notifications** — email a customer when an out-of-stock product becomes available again
 - **Social Login** — register and log in with Google or Facebook via allauth social providers
 - **Order Tracking** — display a shipping status and tracking number on the order detail page
-- **Email Unsubscribe Page** — a dedicated landing page for newsletter unsubscription via a tokenised link
+- **Tokenised Unsubscribe Links** — one-click unsubscribe links embedded directly in marketing emails
 
 ---
 
-## Technologies Used
+## Web Marketing
+
+### Business Model
+
+SportsMode operates as a **B2C (Business-to-Consumer) e-commerce** business. The revenue model is straightforward: customers browse a curated catalogue of sports equipment, add items to their bag, and complete a one-time purchase via Stripe-powered card payment. There are no subscriptions, no marketplace fees, and no auction mechanics — a single transaction is the entire revenue event.
+
+**How the business makes money:**
+- Direct product sales with a fixed retail price
+- Higher-margin items (premium equipment) carry larger markups
+- Promotional discounts (`original_price` vs `price`) are used selectively to clear stock or drive volume on featured lines
+- Free delivery above £50 encourages customers to increase basket size before checkout
+
+**Key business constraints the site is designed around:**
+- All inventory must be managed by staff — no third-party seller accounts
+- Payment is handled entirely by Stripe; no card data touches the server
+- Delivery is UK-focused (GBP currency, UK address format)
+
+---
+
+### Target Audience
+
+SportsMode targets **sports-active consumers in the UK** across three broad segments:
+
+| Segment | Description | Primary Products |
+|---------|-------------|-----------------|
+| **Amateur club players** | Weekend footballers, basketball league members, tennis club regulars | Sport-specific footwear, balls, protective gear |
+| **Home fitness enthusiasts** | People who train at home or at a gym, not affiliated with a team | Resistance bands, weights, fitness accessories |
+| **Gift buyers** | Parents, partners, and friends buying equipment for a sports-active person | Anything — broad range, clear categories |
+
+**Demographics:**
+- Age: 16–45 (primary), 45+ (secondary, fitness)
+- Location: United Kingdom
+- Income: Mid-range — willing to pay for quality but price-aware; responds to sale badges and the free delivery threshold
+- Device: Mobile-first (60%+ of traffic expected on mobile)
+
+**What they need from the site:**
+- Quick filtering by sport so they don't have to scroll through irrelevant products
+- Clear pricing and stock availability before adding to bag
+- A fast, trustworthy checkout that doesn't require account creation
+- Proof that the business is legitimate (trust signals, secure payment branding)
+
+---
+
+### Marketing Strategy
+
+SportsMode uses a multi-channel organic marketing approach appropriate for an early-stage B2C store with limited paid advertising budget.
+
+#### Search Engine Optimisation (SEO)
+
+Every page includes hand-crafted `<meta name="description">` and `<meta name="keywords">` tags targeting sport-specific long-tail keywords (e.g. *"football training equipment UK"*, *"home fitness gear"*). Open Graph tags are present for social sharing previews.
+
+Structural SEO:
+- `robots.txt` served at `/robots.txt` with correct `Disallow` rules for private pages and a `Sitemap:` directive
+- `sitemap.xml` served at `/sitemap.xml` covering all public URLs
+- Semantic HTML throughout — `<h1>` per page, `<article>` for products, `<nav>` with `aria-label`, `<main>` wrapping page content
+- Clean slug-based product URLs (`/products/nike-football-boots/`) that are keyword-rich and human-readable
+
+Keywords chosen target mid-competition terms where an independent store can rank:
+- Short-tail: *sports equipment*, *football gear*, *fitness accessories*
+- Long-tail: *buy football boots UK*, *home gym equipment free delivery*, *basketball training gear*
+
+#### Social Media
+
+A **Facebook Business Page** has been created for SportsMode (see screenshot below). Facebook is the primary social channel because:
+- It reaches the 25–45 age bracket most likely to purchase mid-to-premium sports equipment
+- Facebook Shops integration is a future option for direct product promotion
+- Event-based content (match days, training seasons) aligns naturally with the product catalogue
+
+The footer of every page links to social channels (Facebook, Instagram, Twitter/X, YouTube) with proper `rel="noopener noreferrer"` attributes.
+
+#### Email Marketing
+
+The newsletter system captures subscriber emails directly into the database via the Django-backed sign-up form in the site footer. This owned list is more reliable than social reach because:
+- It is not subject to algorithm changes
+- Subscribers have explicitly opted in
+- It can be used for targeted campaigns (new stock alerts, seasonal sales)
+
+Users can unsubscribe at any time via the `/newsletter/unsubscribe/` page linked in the footer, and previously unsubscribed users can re-subscribe if they change their mind.
+
+**Planned email content:**
+- New product announcements
+- Seasonal promotions (pre-season sales, Black Friday)
+- Sport-specific drops (new football range at the start of the football season)
+
+#### Transactional Emails
+
+Order confirmation and welcome emails are sent automatically via Django's email backend. These reinforce brand trust at the highest-intent moments (registration and post-purchase) and carry the SportsMode branding.
+
+---
+
+### Facebook Business Page
+
+![SportsMode Facebook Business Page](./static/readme_images/sm-facebook.png)
+
+---
 
 ### Languages
 
