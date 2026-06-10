@@ -62,8 +62,7 @@
                 <div class="card-body">
                     <p class="h6 fw-bold mb-3">Search</p>
                     <form action="{% url 'products:product_list' %}" method="GET" role="search">
-                        {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category.slug }}">{% endif %}
-                        {% if selected_sport %}<input type="hidden" name="sport" value="{{ selected_sport }}">{% endif %}
+{% if selected_sport %}<input type="hidden" name="sport" value="{{ selected_sport }}">{% endif %}
                         {% if sort_by != 'name' %}<input type="hidden" name="sort" value="{{ sort_by }}">{% endif %}
                         <div class="input-group input-group-sm">
                             <input type="search" name="q" class="form-control"
@@ -75,29 +74,6 @@
                             </button>
                         </div>
                     </form>
-                </div>
-            </div>
-
-            <!-- Category Filter -->
-            <div class="card border-0 shadow-sm rounded-3 mb-3">
-                <div class="card-body">
-                    <p class="h6 fw-bold mb-3">Category</p>
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-1">
-                            <a href="{% url 'products:product_list' %}{% if search_query %}?q={{ search_query }}{% endif %}"
-                               class="text-decoration-none {% if not selected_category %}fw-semibold text-dark{% else %}text-muted{% endif %}">
-                                <i class="bi bi-grid me-2"></i>All Products
-                            </a>
-                        </li>
-                        {% for cat in categories %}
-                        <li class="mb-1">
-                            <a href="{% url 'products:product_list' %}?category={{ cat.slug }}{% if search_query %}&q={{ search_query }}{% endif %}"
-                               class="text-decoration-none {% if selected_category.slug == cat.slug %}fw-semibold text-dark{% else %}text-muted{% endif %}">
-                                <i class="bi bi-chevron-right me-1"></i>{{ cat.friendly_name|default:cat.name }}
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
                 </div>
             </div>
 
@@ -142,15 +118,6 @@
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
                 <!-- Active filter badges -->
                 <div class="d-flex flex-wrap gap-2 align-items-center">
-                    {% if selected_category %}
-                    <span class="badge bg-dark text-white px-3 py-2">
-                        {{ selected_category.friendly_name }}
-                        <a href="{% url 'products:product_list' %}{% if search_query %}?q={{ search_query }}{% endif %}"
-                           class="text-warning ms-2" aria-label="Remove category filter">
-                            <i class="bi bi-x-lg"></i>
-                        </a>
-                    </span>
-                    {% endif %}
                     {% if selected_sport %}
                     <span class="badge bg-dark text-white px-3 py-2">
                         {{ selected_sport|title }}

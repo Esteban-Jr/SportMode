@@ -42,7 +42,6 @@ def product_list(request):
     plus sorting by price or name. All filters are combinable.
     """
     products = Product.objects.filter(is_active=True)
-    categories = Category.objects.all()
 
     # -- Active filter state (read from GET params) --
     selected_category = None
@@ -85,7 +84,6 @@ def product_list(request):
 
     context = {
         'products': products,
-        'categories': categories,
         'sport_choices': Product.SPORT_CHOICES,
         'sport_choices_with_emoji': [
             (value, label, {'football': '⚽', 'basketball': '🏀', 'tennis': '🎾', 'fitness': '🏋️'}.get(value, '🏅'))
