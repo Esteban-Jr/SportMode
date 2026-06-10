@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
 from .forms import SubscriberForm
@@ -60,3 +60,41 @@ def subscribe(request):
         messages.error(request, error_text)
 
     return redirect(redirect_url)
+
+
+def unsubscribe(request):
+    """
+    GET  → show confirmation form, pre-populated with ?email= param if present.
+    POST → mark the subscriber inactive (soft delete) and confirm to the user.
+
+    No login required so links in emails work for anyone.
+    """
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip().lower()
+        if email:
+            try:
+                subscriber = Subscriber.objects.get(email__iexact=email)
+                if subscriber.is_active:
+                    subscriber.is_active = False
+                    subscriber.save()
+                    messages.success(
+                        request,
+                        f'{email} has been unsubscribed. '
+                        'You will no longer receive emails from us.'
+                    )
+                else:
+                    messages.info(
+                        request,
+                        f'{email} is not currently subscribed.'
+                    )
+            except Subscriber.DoesNotExist:
+                messages.info(
+                    request,
+                    "We couldn't find that email address in our list."
+                )
+        else:
+            messages.error(request, 'Please enter your email address.')
+        return redirect('newsletter:unsubscribe')
+
+    prefill_email = request.GET.get('email', '')
+    return render(request, 'newsletter/unsubscribe.html', {'prefill_email': prefill_email})
