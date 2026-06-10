@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Category
+from .models import Category, Product, ProductReview
 
 
 class ProductForm(forms.ModelForm):
@@ -34,3 +34,29 @@ class ProductForm(forms.ModelForm):
                 field.widget.attrs['class'] = 'form-control'
             else:
                 field.widget.attrs.setdefault('class', 'form-control')
+
+
+class ProductReviewForm(forms.ModelForm):
+    """Form for creating and editing a product review."""
+
+    class Meta:
+        model = ProductReview
+        fields = ('rating', 'title', 'body')
+        widgets = {
+            'rating': forms.Select(attrs={'class': 'form-select'}),
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Summarise your experience',
+                'maxlength': '100',
+            }),
+            'body': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 4,
+                'placeholder': 'Tell others what you think about this product...',
+            }),
+        }
+        labels = {
+            'rating': 'Your Rating',
+            'title': 'Review Title',
+            'body': 'Your Review',
+        }
