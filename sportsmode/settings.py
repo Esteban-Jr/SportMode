@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'checkout',
     'profiles',
     'newsletter',
+    'wishlist',
 ]
 
 SITE_ID = 1
@@ -101,6 +102,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'bag.contexts.bag_contents',
+                'wishlist.contexts.wishlist_product_ids',
             ],
         },
     },
