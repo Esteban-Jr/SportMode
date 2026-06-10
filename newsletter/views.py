@@ -42,7 +42,8 @@ def subscribe(request):
                 subscriber.save()
                 messages.success(
                     request,
-                    "Welcome back! You've been re-subscribed to the SportMode newsletter."
+                    "Welcome back! You've been re-subscribed "
+                    "to the SportMode newsletter."
                 )
 
         except Subscriber.DoesNotExist:
@@ -97,4 +98,8 @@ def unsubscribe(request):
         return redirect('newsletter:unsubscribe')
 
     prefill_email = request.GET.get('email', '')
-    return render(request, 'newsletter/unsubscribe.html', {'prefill_email': prefill_email})
+    return render(
+        request,
+        'newsletter/unsubscribe.html',
+        {'prefill_email': prefill_email},
+    )
