@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils.text import slugify
 
@@ -146,3 +147,54 @@ class Product(models.Model):
         if self.is_on_sale:
             return round((self.saving / self.original_price) * 100)
         return None
+
+    @property
+    def average_rating(self):
+        """Mean star rating across all reviews, or None if no reviews exist."""
+        reviews = self.reviews.all()
+        if not reviews:
+            return None
+        return round(sum(r.rating for r in reviews) / len(reviews), 1)
+
+    @property
+    def review_count(self):
+        return self.reviews.count()
+
+
+class ProductReview(models.Model):
+    """
+    A single star-rating and written review left by a registered user
+    for a specific product. Each user may submit at most one review
+    per product (enforced by unique_together).
+    """
+
+    RATING_CHOICES = [
+        (1, '1 — Poor'),
+        (2, '2 — Fair'),
+        (3, '3 — Good'),
+        (4, '4 — Very Good'),
+        (5, '5 — Excellent'),
+    ]
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='reviews',
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='reviews',
+    )
+    rating = models.IntegerField(choices=RATING_CHOICES)
+    title = models.CharField(max_length=100)
+    body = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        unique_together = ('product', 'user')
+
+    def __str__(self):
+        return f'{self.user.username} — {self.product.name} ({self.rating}★)'
