@@ -1,0 +1,12 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /bag/
+Disallow: /checkout/
+Disallow: /profile/
+Disallow: /newsletter/
+Disallow: /products/add/
+Disallow: /products/*/edit/
+Disallow: /products/*/delete/
+
+Sitemap: https://sportsmode-2f5683baa15c.herokuapp.com/sitemap.xml
