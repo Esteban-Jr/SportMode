@@ -172,6 +172,11 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a class="dropdown-item" href="{% url 'wishlist:wishlist_detail' %}">
+                                        <i class="bi bi-heart me-2"></i>My Wishlist
+                                    </a>
+                                </li>
+                                <li>
                                     <a class="dropdown-item" href="{% url 'account_change_password' %}">
                                         <i class="bi bi-key me-2"></i>Change Password
                                     </a>
@@ -201,6 +206,23 @@
 
                         </ul>
                     </li>
+
+                    <!-- Wishlist -->
+                    {% if request.user.is_authenticated %}
+                    <li class="nav-item ms-1">
+                        <a class="nav-link position-relative {% if '/wishlist' in request.path %}active{% endif %}"
+                           href="{% url 'wishlist:wishlist_detail' %}"
+                           aria-label="Wishlist — {{ wishlist_product_ids|length }} item{{ wishlist_product_ids|length|pluralize }}">
+                            <i class="bi bi-heart{% if wishlist_product_ids %}-fill text-danger{% endif %} fs-5"></i>
+                            {% if wishlist_product_ids %}
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                  style="font-size: 0.65rem;">
+                                {{ wishlist_product_ids|length }}
+                            </span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    {% endif %}
 
                     <!-- Bag -->
                     <li class="nav-item ms-1">
