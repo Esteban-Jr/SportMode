@@ -40,7 +40,11 @@ def cache_checkout_data(request):
         })
         return HttpResponse(status=200)
     except Exception as e:
-        messages.error(request, 'Sorry, your payment cannot be processed right now. Please try again later.')
+        messages.error(
+            request,
+            'Sorry, your payment cannot be processed right now. '
+            'Please try again later.'
+        )
         return HttpResponse(content=str(e), status=400)
 
 
@@ -53,7 +57,10 @@ def checkout(request):
     stripe_secret_key = settings.STRIPE_SECRET_KEY
 
     if not stripe_public_key:
-        messages.warning(request, 'Stripe public key is missing. Check your environment variables.')
+        messages.warning(
+            request,
+            'Stripe public key is missing. Check your environment variables.'
+        )
 
     bag = request.session.get('bag', {})
     if not bag:
