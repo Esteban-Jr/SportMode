@@ -106,11 +106,19 @@ class StripeWH_Handler:
         order = None
         try:
             addr = shipping_details.address if shipping_details else {}
+            name = (
+                shipping_details.name if shipping_details
+                else billing_details.name
+            )
+            phone = (
+                shipping_details.phone if shipping_details
+                else billing_details.phone
+            )
             order = Order.objects.create(
-                full_name=shipping_details.name if shipping_details else billing_details.name,
+                full_name=name,
                 user_profile=profile,
                 email=billing_details.email,
-                phone_number=shipping_details.phone if shipping_details else billing_details.phone,
+                phone_number=phone,
                 street_address1=addr.get('line1', ''),
                 street_address2=addr.get('line2', ''),
                 town_or_city=addr.get('city', ''),
