@@ -146,7 +146,7 @@
                 <!-- Add to Bag -->
                 <form method="POST"
                       action="{% url 'bag:add_to_bag' product.pk %}"
-                      class="mb-4">
+                      class="mb-3">
                     {% csrf_token %}
                     <input type="hidden" name="redirect_url" value="{{ request.path }}">
                     <div class="d-flex gap-3 align-items-center flex-wrap">
@@ -178,6 +178,36 @@
                         <strong>£{{ free_delivery_threshold|floatformat:2 }}</strong>
                     </p>
                 </form>
+
+                <!-- Wishlist toggle -->
+                {% if request.user.is_authenticated %}
+                    {% if product.pk in wishlist_product_ids %}
+                    <form method="POST"
+                          action="{% url 'wishlist:remove_from_wishlist' product.pk %}"
+                          class="mb-4">
+                        {% csrf_token %}
+                        <input type="hidden" name="redirect_url" value="{{ request.path }}">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="bi bi-heart-fill me-1"></i>Remove from Wishlist
+                        </button>
+                    </form>
+                    {% else %}
+                    <form method="POST"
+                          action="{% url 'wishlist:add_to_wishlist' product.pk %}"
+                          class="mb-4">
+                        {% csrf_token %}
+                        <input type="hidden" name="redirect_url" value="{{ request.path }}">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-heart me-1"></i>Add to Wishlist
+                        </button>
+                    </form>
+                    {% endif %}
+                {% else %}
+                <p class="text-muted small mb-4">
+                    <a href="{% url 'account_login' %}?next={{ request.path }}">Sign in</a>
+                    to save this item to your wishlist.
+                </p>
+                {% endif %}
 
                 <!-- Trust signals -->
                 <div class="row g-2 border-top pt-4">
@@ -212,7 +242,16 @@
                     <li class="nav-item">
                         <button class="nav-link fw-semibold" data-bs-toggle="tab"
                                 data-bs-target="#tab-delivery" role="tab">
-                            Delivery & Returns
+                            Delivery &amp; Returns
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link fw-semibold" data-bs-toggle="tab"
+                                data-bs-target="#tab-reviews" role="tab">
+                            Reviews
+                            {% if product.review_count %}
+                            <span class="badge bg-secondary ms-1">{{ product.review_count }}</span>
+                            {% endif %}
                         </button>
                     </li>
                 </ul>
@@ -239,6 +278,122 @@
                             </li>
                         </ul>
                     </div>
+
+                    <!-- ===== REVIEWS TAB ===== -->
+                    <div class="tab-pane fade" id="tab-reviews" role="tabpanel">
+
+                        <!-- Average rating summary -->
+                        {% if product.review_count %}
+                        <div class="d-flex align-items-center gap-3 mb-4 p-3 bg-light rounded-3">
+                            <span class="display-5 fw-bold">{{ product.average_rating }}</span>
+                            <div>
+                                <div class="star-display text-warning fs-5" aria-hidden="true">
+                                    {% with avg=product.average_rating %}
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= avg %}
+                                            <i class="bi bi-star-fill"></i>
+                                        {% else %}
+                                            <i class="bi bi-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% endwith %}
+                                </div>
+                                <span class="text-muted small">
+                                    {{ product.review_count }} review{{ product.review_count|pluralize }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Existing reviews -->
+                        {% for review in reviews %}
+                        <article class="border rounded-3 p-3 mb-3" aria-label="Review by {{ review.user.username }}">
+                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-1">
+                                <div>
+                                    <span class="text-warning" aria-label="{{ review.rating }} out of 5 stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= review.rating %}
+                                                <i class="bi bi-star-fill"></i>
+                                            {% else %}
+                                                <i class="bi bi-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="fw-semibold ms-2">{{ review.title }}</span>
+                                </div>
+                                <span class="text-muted small">
+                                    {{ review.user.username }} &middot; {{ review.created_at|date:"d M Y" }}
+                                </span>
+                            </div>
+                            <p class="mb-2 text-muted">{{ review.body }}</p>
+
+                            <!-- Edit / delete controls -->
+                            {% if review.user == request.user or request.user.is_staff or request.user.is_superuser %}
+                            <div class="d-flex gap-2">
+                                {% if review.user == request.user %}
+                                <a href="{% url 'products:edit_review' product.slug review.pk %}"
+                                   class="btn btn-outline-secondary btn-sm">
+                                    <i class="bi bi-pencil me-1"></i>Edit
+                                </a>
+                                {% endif %}
+                                <form method="POST"
+                                      action="{% url 'products:delete_review' product.slug review.pk %}"
+                                      class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm"
+                                            onclick="return confirm('Delete this review?')">
+                                        <i class="bi bi-trash me-1"></i>Delete
+                                    </button>
+                                </form>
+                            </div>
+                            {% endif %}
+                        </article>
+                        {% empty %}
+                        <p class="text-muted">No reviews yet. Be the first to review this product!</p>
+                        {% endfor %}
+
+                        <!-- Add review form -->
+                        {% if user_review %}
+                            <!-- User has already reviewed — no form shown -->
+                        {% elif request.user.is_authenticated %}
+                        <div class="mt-4 border-top pt-4">
+                            <h3 class="h5 fw-semibold mb-3">Write a Review</h3>
+                            <form method="POST"
+                                  action="{% url 'products:add_review' product.slug %}">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="id_rating" class="form-label fw-semibold">
+                                        {{ review_form.rating.label }}
+                                    </label>
+                                    {{ review_form.rating }}
+                                </div>
+                                <div class="mb-3">
+                                    <label for="id_title" class="form-label fw-semibold">
+                                        {{ review_form.title.label }}
+                                    </label>
+                                    {{ review_form.title }}
+                                </div>
+                                <div class="mb-3">
+                                    <label for="id_body" class="form-label fw-semibold">
+                                        {{ review_form.body.label }}
+                                    </label>
+                                    {{ review_form.body }}
+                                </div>
+                                <button type="submit" class="btn btn-sport">
+                                    <i class="bi bi-send me-1"></i>Submit Review
+                                </button>
+                            </form>
+                        </div>
+                        {% else %}
+                        <p class="text-muted mt-3">
+                            <a href="{% url 'account_login' %}?next={{ request.path }}">Sign in</a>
+                            to leave a review.
+                        </p>
+                        {% endif %}
+
+                    </div>
+                    <!-- ===== END REVIEWS TAB ===== -->
+
                 </div>
             </div>
         </div>
